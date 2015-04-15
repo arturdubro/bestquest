@@ -680,10 +680,7 @@ nav ul, nav menu, nav ol, nav dl, nav dt, nav dd {
 	padding:0 25px;
 }
 
-.l-header .logo-wrapper {
-	position:absolute;
-	top:0px;
-	left:5px;
+.logo-wrapper {
 	background:url("../img/logo.png") no-repeat center;
 	background-size:83px auto;
 	width:124px;
@@ -692,15 +689,24 @@ nav ul, nav menu, nav ol, nav dl, nav dt, nav dd {
 	-webkit-transition:all 0.5s cubic-bezier(0.39,  0.575,  0.565,  1);
 	-moz-transition:all 0.5s cubic-bezier(0.39,  0.575,  0.565,  1);
 	transition:all 0.5s cubic-bezier(0.39,  0.575,  0.565,  1);
+	box-sizing: border-box;
 }
 
-.l-header .logo-wrapper.small {
+.l-header .logo-wrapper{
+	float: left;
+}
+
+.l-header .logo-wrapper.unvisible{
+	opacity: 0;
+}
+
+.logo-wrapper.small {
 	height:47px;
 	width:48.66666px;
 	background-size:32.5px auto;
 }
 
-.l-header .logo-wrapper.small .logotype {
+.logo-wrapper.small .logotype {
 	display:none;
 }
 
@@ -709,6 +715,8 @@ nav ul, nav menu, nav ol, nav dl, nav dt, nav dd {
 	font-size:1.125rem;
 	line-height:1.11111;
 	position:absolute;
+	width: 124px;
+	margin-left: 17px;
 	top:132px;
 	right:0px;
 	left:2px;
@@ -743,8 +751,8 @@ nav ul, nav menu, nav ol, nav dl, nav dt, nav dd {
 }
 
 .l-header__nav {
-	float:left;
-	margin-left:130px;
+	float: left;
+	margin-left: 6px;
 }
 
 .l-header__menu:after {
@@ -1218,7 +1226,7 @@ textarea, .textarea {
 	letter-spacing:0.1em;
 	font-family: "Helvetica Neue Bold",  Helvetica,  Arial,  sans-serif;
 	font-weight:700;
-	margin-bottom:52px;
+	margin-bottom: 20px;
 }
 
 .s-title.white {
@@ -2023,10 +2031,20 @@ textarea, .textarea {
 	max-width:720px;
 	display:inline-block;
 	text-align:left;
+	position: relative;
+}
+
+.b-title-slide .logo-wrapper{
+	position: absolute;
+	top: 0;
+	left: -150px;
+	background-color: #E20000;
 }
 
 .b-title-slide__slogan{
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	letter-spacing: 2px;
 }
 
 .table {
