@@ -807,6 +807,13 @@ nav ul, nav menu, nav ol, nav dl, nav dt, nav dd {
 	font-family:"PT Sans",  "Helvetica Neue",  Helvetica,  Arial,  sans-serif;
 }
 
+.l-header__email a{
+	text-transform: lowercase;
+	padding: 0;
+	display: inline-block;
+	outline: none;
+}
+
 .l-header__actions .order>a {
 	display:block;
 	padding:0 25px;
