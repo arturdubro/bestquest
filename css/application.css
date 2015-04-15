@@ -2004,12 +2004,13 @@ textarea, .textarea {
 
 }.b-title-slide {
 	position:absolute;
-	top:0px;
-	right:0px;
-	bottom:0px;
-	left:0px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	min-width: 980px;
+	height: 730px;
 	z-index:1000;
-	background:rgba(48, 48, 48, 0.95);
+	background: #232323;
 	color:#ffffff;
 	text-transform:uppercase;
 	overflow:hidden;
@@ -2106,4 +2107,13 @@ textarea, .textarea {
 	font-weight:600;
 	float:left;
 	margin-right:5px;
+}
+
+
+@media (max-width: 1150px){
+
+	.l-header__actions>div {
+  	margin: 0 8px;
+	}
+
 }
