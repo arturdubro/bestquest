@@ -1495,14 +1495,11 @@ textarea, .textarea {
 	font-family:"PT Sans",  "Helvetica Neue",  Helvetica,  Arial,  sans-serif;
 	font-weight:700;
 	margin-left:-36px;
+	position: absolute;
 }
 
 .b-order-block {
 	position:absolute;
-	top:-50%;
-	right:false;
-	bottom:false;
-	left:false;
 	-webkit-box-sizing:border-box;
 	-moz-box-sizing:border-box;
 	box-sizing:border-box;
@@ -1510,7 +1507,7 @@ textarea, .textarea {
 	background:#EDEDED;
 	text-align:left;
 	padding:25px 30px;
-	margin-top:36px;
+	transform: translateY(-29%);
 }
 
 .b-order-block p {
