@@ -1216,7 +1216,7 @@ textarea, .textarea {
 .s-title {
 	text-transform:uppercase;
 	letter-spacing:0.1em;
-	font-family:"PT Sans",  "Helvetica Neue",  Helvetica,  Arial,  sans-serif;
+	font-family: "Helvetica Neue Bold",  Helvetica,  Arial,  sans-serif;
 	font-weight:700;
 	margin-bottom:52px;
 }
@@ -2023,7 +2023,10 @@ textarea, .textarea {
 	max-width:720px;
 	display:inline-block;
 	text-align:left;
-	margin-top:-300px;
+}
+
+.b-title-slide__slogan{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .table {
