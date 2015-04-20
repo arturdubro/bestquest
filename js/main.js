@@ -1919,6 +1919,16 @@ function() {
   }.call(this);
 
 $(function(){
+
+  // обработка для слайдера
+  $( "[data-slider]" ).on("click", function(){
+    $(".b-title-slide").fadeOut(200);
+    $(".unvisible").css("opacity", "1");
+    var type = $(this).attr("data-slider");
+    $("[data-action='" + type + "']").click();
+  })
+
+
   setTimeout(function() {
     $(".unvisible").css("opacity", "1");
   }, 5000);

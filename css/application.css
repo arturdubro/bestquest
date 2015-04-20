@@ -1174,7 +1174,8 @@ nav dd {
   line-height: 3.42857;
 }
 
-.l-header a {
+.l-header a,
+.l-header i {
   display: block;
   padding: 0 25px;
 }
@@ -1291,12 +1292,14 @@ nav dd {
   cursor: pointer;
 }
 
-.l-header__submenu .item > a {
+.l-header__submenu .item > a,
+.l-header__submenu .item > i {
   padding: 10px 20px;
   font-size: 14px;
   font-size: 0.875rem;
   font-family: "PT Sans",  "Helvetica Neue",  Helvetica,  Arial,  sans-serif;
   line-height: 1.5;
+  font-style: normal;
 }
 
 .l-header__submenu .item:hover > a {
