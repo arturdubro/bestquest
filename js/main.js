@@ -1925,5 +1925,6 @@ $(function(){
 
   $(".b-slider__pages .item").on("click", function(){
     $(".b-title-slide").fadeOut(200);
+    $(".unvisible").css("opacity", "1");
   })
 })
