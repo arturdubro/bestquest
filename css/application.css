@@ -1356,6 +1356,9 @@ nav dd {
   z-index: 2;
   min-height: 100vh;
   padding-top: 1px;
+  background-position: bottom left,  center center;
+  background-size: 100% 50%,  cover;
+  background-repeat: no-repeat,  no-repeat;
 }
 
 .l-section-home .b-text-wrapper {
