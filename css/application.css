@@ -2756,4 +2756,4 @@ textarea,
   .l-header__actions > div {
     margin: 0 8px;
   }
-}
+}@media (max-width: 1030px) {  .l-header a {    display: block;    padding: 0 15px;  }}
