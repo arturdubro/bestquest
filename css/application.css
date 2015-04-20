@@ -2543,7 +2543,7 @@ textarea,
   box-sizing: border-box;
   display: table-cell;
   height: 100vh;
-  padding-top: 8%;
+  vertical-align: middle;
 }
 
 .l-main{
@@ -2784,32 +2784,4 @@ textarea,
   .l-header__actions > div {
     margin: 0 8px;
   }
-}
-
-@media (max-width: 1030px) {
-  .l-header a {
-    display: block;
-    padding: 0 15px;
-  }
-}
-
-.b-title-slide .s-title{
-  margin-bottom: 17px;
-  line-height: 0.8;
-}
-
-.b-title-slide__slogan {
-  letter-spacing: 11px;
-}
-
-.b-title-slide .sub-slogan{
-  font-weight: 300;
-  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 2rem;
-  line-height: 1.375;
-  margin-top: 50px;
-  padding-top: 50px;
-  border-top: 1px solid #fff;
-  margin-left: -150px;
-  letter-spacing: 4px;
-}
+}@media (max-width: 1030px) {  .l-header a {    display: block;    padding: 0 15px;  }}.b-title-slide .s-title{  margin-bottom: 17px;  line-height: 0.8;}.b-title-slide__slogan {  letter-spacing: 11px;}.b-title-slide .sub-slogan{  font-weight: 300;  font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;  font-size: 2rem;  line-height: 1.375;  margin-top: 50px;  padding-top: 50px;  border-top: 1px solid #fff;  margin-left: -150px;  letter-spacing: 4px;}
