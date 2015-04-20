@@ -1881,7 +1881,7 @@ function() {
       var i;
       return $("<style type='text/css' id='dynamic' />").appendTo("head"), e(), $("#title-slide") && setTimeout(function() {
         return $("#title-slide").fadeOut()
-      }, 10000), t($("#logotype")), $("#date").datepicker({
+      }, 5000), t($("#logotype")), $("#date").datepicker({
         format: "mm.dd.yyyy",
         autoclose: !0
       }), $("img.svg").each(function() {
@@ -1921,5 +1921,9 @@ function() {
 $(function(){
   setTimeout(function() {
     $(".unvisible").css("opacity", "1");
-  }, 10000);
+  }, 5000);
+
+  $(".b-slider__pages .item").on("click", function(){
+    $(".b-title-slide").fadeOut(200);
+  })
 })
