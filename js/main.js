@@ -1920,6 +1920,15 @@ function() {
 
 $(function(){
 
+  // обработка приема параметров
+  var a = decodeURIComponent(location.search.substr(1)).split('&');
+
+  if( a[0] != ""){
+    $(".b-title-slide").fadeOut(200);
+    $(".unvisible").css("opacity", "1");
+    $("[data-action='" + a[0] + "']").click();
+  }
+
   // обработка для слайдера
   $( "[data-slider]" ).on("click", function(){
     $(".b-title-slide").fadeOut(200);
@@ -1927,7 +1936,6 @@ $(function(){
     var type = $(this).attr("data-slider");
     $("[data-action='" + type + "']").click();
   })
-
 
   setTimeout(function() {
     $(".unvisible").css("opacity", "1");
