@@ -2523,10 +2523,15 @@ textarea,
   position: absolute;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
   margin: 0;
+  margin-left: -457px;
   z-index: 10;
   display: block;
+}
+
+.index{
+  background-image: linear-gradient(transparent 0%, #232323 70%, #232323 100%),url("../img/index/bgs/bg-top.jpg");
+  background: #232323;
 }
 
 .b-slider__pages {
@@ -2544,6 +2549,7 @@ textarea,
   display: table-cell;
   height: 100vh;
   vertical-align: middle;
+  width: 100%;
 }
 
 .l-main{
@@ -2680,7 +2686,7 @@ textarea,
   display: inline-block;
   max-width: 720px;
   text-align: left;
-  transform: translateX(75px);
+  margin-right: -170px;
 }
 
 .b-title-slide .logo-wrapper {
