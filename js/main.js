@@ -1945,4 +1945,9 @@ $(function(){
     $(".b-title-slide").fadeOut(200);
     $(".unvisible").css("opacity", "1");
   })
+
+  if ( $(".b-slider__pages .item").hasClass("active") ){
+    $(this).click();
+  }
+
 })
