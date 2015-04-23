@@ -1354,7 +1354,8 @@ nav dd {
 
 .l-section-home {
   z-index: 2;
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 700px;
   padding-top: 1px;
   background-position: bottom left,  center center;
   background-size: 100% 50%,  cover;
@@ -2518,13 +2519,13 @@ textarea,
 }
 
 .index .b-slider__pages {
-  width: 915px;
+  width: 1200px;
   padding: 0;
   position: absolute;
   bottom: 0;
   left: 50%;
   margin: 0;
-  margin-left: -457px;
+  margin-left: -600px;
   z-index: 10;
   display: block;
 }
@@ -2563,8 +2564,13 @@ textarea,
   content: "";
 }
 
+.b-slider__pages{
+  text-align: center;
+}
+
 .b-slider__pages .item {
-  display: table-cell;
+  display: inline-block;
+  width: 100px;
   padding: 0 22px;
   color: white;
   text-align: center;
