@@ -1946,8 +1946,9 @@ $(function(){
     $(".unvisible").css("opacity", "1");
   })
 
-  if ( $(".b-slider__pages .item").hasClass("active") ){
-    $(this).click();
+  if ( $(".b-slider__pages .item").hasClass("action") ){
+    console.log('yes');
+    $(".b-slider__pages .action").click();
   }
 
 })
