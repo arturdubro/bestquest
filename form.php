@@ -1,5 +1,5 @@
 <?php
-$to      = 'info@best-quest.ru';
+$to      = 'dmkazantsev@gmail.com';
 $subject = 'Отправлена форма с сайта';
 
 $headers = 'From: bestquest_website@website.ru' . "\r\n" ;
