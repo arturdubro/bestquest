@@ -223,22 +223,22 @@
       </section>
       <section class='l-section l-section-apply' id='apply'>
         <h2 class='s-title white'>Заявка</h2>
-        <form action="form.php" class='s-form b-apply'>
+        <form action="form.php" method="get" class='s-form b-apply'>
           <div class='s-form-group'>
             <label for='name'>Контактное лицо</label>
-            <input class='s-control' id='name' name='name' placeholder='Как к вам обращаться?' size='40' type='text'>
+            <input required class='s-control' id='name' name='name' placeholder='Как к вам обращаться?' size='40' type='text'>
           </div>
           <div class='s-form-group'>
-            <input class='s-control' id='email' name='email' placeholder='Ваш e-mail' size='20' type='email'>
+            <input required class='s-control' id='email' name='email' placeholder='Ваш e-mail' size='20' type='email'>
           </div>
           <div class='s-form-group'>
-            <input class='s-control' id='phone' name='phone' placeholder='Ваш телефон' size='20' type='text'>
+            <input required class='s-control' id='phone' name='phone' placeholder='Ваш телефон' size='20' type='text'>
           </div>
           <div class='s-form-group'>
             <label class='inline' for='date'>Когда</label>
-            <input class='s-control date' id='date' name='date' size='12' type='text'>
+            <input required class='s-control date' id='date' name='date' size='12' type='text'>
             <label class='inline' for='qty'>Человек</label>
-            <input type="number" name="qty" value="0" max="1000" style='width: 60px'>
+            <input required type="number" name="qty" value="0" max="1000" style='width: 60px'>
           </div>
           <div class='s-form-group'>
             <textarea class='s-control textarea' id='descr' name='descr' placeholder='Подробности' rows='6'></textarea>

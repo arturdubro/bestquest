@@ -9,7 +9,7 @@ $('.s-form').submit(function(e){
 	//получаем данные, введенные пользователем в формате input1=value1&input2=value2...,
 	//то есть в стандартном формате передачи данных формы
 	var m_data=$(this).serialize();
-	m_data = m_data + "&locattion=" + window.location.toString();
+	m_data = m_data + "&location=" + window.location.toString();
 	$.ajax({
 		type: m_method,
 		url: m_action,
