@@ -1,8 +1,9 @@
 <?php
 $to      = 'info@best-quest.ru';
-$subject = 'Отправлена форма с сайта';
+$subject = 'Заявка с сайта';
 
-$headers = 'From: bestquest_website@website.ru' . "\r\n" ;
+$headers = 'From: best-quest.ru' . "\r\n" ;
+$headers .= "Reply-To: " . $_GET['email'] . "\r\n";
 $headers .= "Content-type: text/plain; charset=UTF-8" . "\r\n";
 $headers .= "Mime-Version: 1.0" . "\r\n";
 
