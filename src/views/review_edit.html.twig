@@ -1,0 +1,50 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+<div class="container">
+<a href="/admin" class="back_to_main">Назад</a>
+{{ form_start(form) }}
+	<div class="one_position">
+		{{ form_label(form.project) }}
+		{{ form_errors(form.project) }}
+		{{ form_widget(form.project) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.name) }}
+		{{ form_errors(form.name) }}
+		{{ form_widget(form.name) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.company) }}
+		{{ form_errors(form.company) }}
+		{{ form_widget(form.company) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.position) }}
+		{{ form_errors(form.position) }}
+		{{ form_widget(form.position) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.review) }}
+		{{ form_errors(form.review) }}
+		{{ form_widget(form.review) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.avatar) }}
+		<img src="/project_files/{{selected_review.project_id}}/reviews/{{selected_review.author_avatar}}" alt="Фотографии нет"/>
+		<p class="change_image">Заменить</p>
+		
+		{{ form_errors(form.avatar) }}
+		{{ form_widget(form.avatar) }}
+	</div>
+<input type="submit" value="Редактировать"/>
+{{ form_end(form) }}
+</div>
+<script>
+	var change_img = document.getElementsByClassName('change_image');
+	for (var i=0; i<change_img.length; i++){
+		change_img[i].onclick = function(){
+			this.nextElementSibling.style.display = 'block';
+		}
+	}
+</script>
+{% endblock %}
