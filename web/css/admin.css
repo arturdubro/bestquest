@@ -1,0 +1,289 @@
+.container{
+	width: 1000px;
+	margin: 10px auto;
+	border: 1px solid #000;
+	overflow: hidden;
+}
+.div50{
+	float: left;
+	width: 480px;
+	padding-right: 20px;
+	margin-bottom: 20px;
+}
+	.div50:nth-child(2n){
+		padding-right: 0;
+	}
+	.div50 label{
+		display: block;
+	}
+	.div50 textarea{
+		width: 100%;
+	}
+	.div50 input[type="text"]{
+		display: block;
+		width: 400px;
+		margin-bottom: 5px;
+	}
+	.div50 input[type="file"]{
+		margin-bottom: 5px;
+	}
+	.div50 img{
+		max-height:250px;
+		max-width:100%;
+		margin-bottom: 10px;
+	}
+	.div50.one_partner{
+		min-height: 200px;
+	}
+.project_action{
+	display: inline-block;
+	font-size: 24px;
+	line-height: 40px;
+	text-decoration: none;
+	color: #000;
+	padding-left: 50px;
+	position: relative;
+	z-index: 1;
+}
+	.project_action:before{
+		content:'';
+		display: block;
+		position: absolute;
+		left:0;
+		top:0;
+		width: 40px;
+		height: 40px;
+		opacity: 0.3;
+		background: #fff;
+		-webkit-transition: 1s all;
+		-moz-transition: 1s all;
+		-ms-transition: 1s all;
+		-o-transition: 1s all;
+		transition: 1s all;
+		z-index: 100;
+	}
+	.project_action:hover:before{
+		opacity: 0;
+	}
+.add_project{
+	background: url('../img/icons/project_add.png') no-repeat left center;
+}
+.edit_project{
+	background: url('../img/icons/project_edit.png') no-repeat left center;
+}
+.delete_project{
+	background: url('../img/icons/project_delete.png') no-repeat left center;
+}
+.back_to_main{
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	padding: 15px 0;
+	margin-bottom: 10px;
+	font-size: 36px;
+	text-transform: uppercase;
+	color: #000;
+	background: #ccc;
+	border-bottom: 1px solid #000;
+}
+	.back_to_main:hover{
+		background: #eee;
+	}
+.about{
+	border-top: 1px solid #000;
+	width: 100%;
+	float: left;
+}
+.one_position{
+	padding: 10px;
+	border-bottom: 1px dotted #ccc;
+	font-size: 0;
+	overflow: hidden;
+}
+	.one_position:after{
+		content:'';
+		display: table;
+		clear: both;
+	}
+
+input[type="text"].hidden_input{
+	visibility: hidden;
+	width: 0;
+	height: 0;
+}
+img{
+	display: block;
+	margin: 0 auto;
+	max-width:100%;
+}
+label{
+	padding-right: 20px;
+	width: 270px;
+	display: inline-block;
+	vertical-align: top;
+	font-size: 16px;
+	line-height: 24px;
+	cursor:pointer;
+}
+input, textarea, select{
+	display: inline-block;
+	vertical-align: top;
+	font-size: 16px;
+	outline:none;
+}
+input[type="text"], textarea{
+	width: 500px;
+}
+input[type="checkbox"], input[type="checkbox"]+label{
+	display: inline-block;
+	vertical-align: middle;
+	cursor:pointer;
+}
+input[type="checkbox"]+label{
+	padding-left: 10px;
+}
+textarea{
+	height: 100px;
+	resize:none;
+}
+.one_icon{
+	display: inline-block;
+	vertical-align: top;
+	width: 240px;
+	padding-top: 60px;
+	position: relative;
+	margin-bottom: 10px;
+}
+	.one_icon input{
+		width: 220px;
+		display: block;
+		margin: 0 auto;
+	}
+	.one_icon:before{
+		content:'';
+		position: absolute;
+		left:0;
+		right:0;
+		top:10px;
+		margin:0 auto;
+		width: 45px;
+		height: 45px;
+		background-color: #000;
+		background-repeat: no-repeat;
+		background-position: center center;
+	}
+		.one_icon.icon_type:before{
+			background-image: url("../img/icons/type.png");
+		}
+		.one_icon.icon_people:before{
+			background-image: url("../img/icons/people.png");
+		}
+		.one_icon.icon_house:before{
+			background-image: url("../img/icons/location.png");
+		}
+		.one_icon.icon_car:before{
+			background-image: url("../img/icons/walk.png");
+		}
+		.one_icon.icon_clock:before{
+			background-image: url("../img/icons/clock.png");
+		}
+		.one_icon.icon_phone:before{
+			background-image: url("../img/icons/phone.png");
+		}
+		.one_icon.icon_age:before{
+			background-image: url("../img/icons/age.png");
+		}
+		.one_icon.icon_type:before{
+			background-image: url("../img/icons/type.png");
+		}
+p.one_position_header{
+	font-size: 16px;
+	text-align: center;
+}
+p.add_delete{
+	font-size: 16px;
+	cursor: pointer;
+	border: 1px solid #000;
+	float: left;
+	padding: 5px 10px;
+	margin-right: 15px;
+}
+p.change_image{
+	font-size: 20px;
+	text-align: center;
+	cursor:pointer;
+}
+	p.change_image + input{
+		display: none;
+	}
+.one_regulation{
+	display: inline-block;
+	vertical-align: top;
+	width: 240px;
+	position: relative;
+	margin: 0 5px 10px 0;
+	font-size: 16px;
+}
+	.one_regulation input[type="text"]{
+		width:auto;
+	}
+input[type="submit"]{
+	display: block;
+	margin: 20px auto;
+	font-size: 36px;
+}
+.one_photo{
+	display: inline-block;
+	vertical-align: top;
+	width: 320px;
+	margin: 0 10px 10px 0;
+	position: relative;
+}
+	.one_photo:nth-child(3n){
+		margin-right: 0;
+	}
+.photo_delete{
+	position: absolute;
+	top:10px;
+	right:10px;
+	width: 50px;
+	height: 50px;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	background: #f00;
+	cursor:pointer;
+}
+	.photo_delete:before{
+		content:'';
+		position: absolute;
+		top:23px;
+		left:10px;
+		display: block;
+		width: 30px;
+		height: 2px;
+		background: #fff;
+		-webkit-transform: rotate(45deg);
+		-moz-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		-o-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
+	.photo_delete:after{
+		content:'';
+		position: absolute;
+		top:23px;
+		left:10px;
+		display: block;
+		width: 30px;
+		height: 2px;
+		background: #fff;
+		-webkit-transform: rotate(-45deg);
+		-moz-transform: rotate(-45deg);
+		-ms-transform: rotate(-45deg);
+		-o-transform: rotate(-45deg);
+		transform: rotate(-45deg);
+	}
+	.photo_delete:hover{
+		background: #000;
+	}
