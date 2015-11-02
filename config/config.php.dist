@@ -1,0 +1,16 @@
+<?php
+return [
+    'debug' => true,
+    'db' => [
+        'driver' => 'pdo_mysql',
+        'host' => 'localhost',
+        'dbname' => 'best_quest',
+        'user' => 'bqbs',
+        'password' => 'bqbs',
+        'charset' => 'utf8',
+    ],
+    'admin' => [
+        'user' => 'admin',
+        'password' => 'MEkh2ci5zRjEziknMrbsaeBAagfD93H4LeSv957UwvjToKcQtPbq1+sc1vEXtOeltJhCHsXs8gFFlAn1rWaLVg==',
+    ],
+];

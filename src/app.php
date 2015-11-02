@@ -7,9 +7,19 @@ use Silex\Provider\FormServiceProvider;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
+use Silex\Application\SecurityTrait;
 
-$app = new Silex\Application();
-$app['debug'] = true;
+$config = include_once __DIR__ . '/../config/config.php';
+
+class Application extends Silex\Application
+{
+    use Silex\Application\SecurityTrait;
+}
+
+$app = new Application();
+
+$app['debug'] = $config['debug'];
+
 
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
@@ -22,28 +32,29 @@ $app->register(new Silex\Provider\TranslationServiceProvider(), array(
 ));
 $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 	'db.options' => array(
-		'driver' => 'pdo_mysql',
-		'host' => 'localhost',
-		'dbname' => 'best_quest',
-		'user' => 'root',
-		'password' => 'root',
-		'charset' => 'utf8',
+		'driver' => $config['db']['driver'],
+		'host' => $config['db']['host'],
+		'dbname' => $config['db']['dbname'],
+		'user' => $config['db']['user'],
+		'password' => $config['db']['password'],
+		'charset' => $config['db']['charset'],
 	),
 ));
 $app['db']->exec('SET NAMES utf8');
 $app->register(new Silex\Provider\ValidatorServiceProvider());
-/*$app->register(new Silex\Provider\SecurityServiceProvider(), array(
+$app->register(new Silex\Provider\SecurityServiceProvider(), array(
     'security.firewalls' => array(
 		'admin' => array(
 			'pattern' => '^/admin',
 			'http' => true,
 			'users' => array(
-				'admin' => array('ROLE_ADMIN', 'MEkh2ci5zRjEziknMrbsaeBAagfD93H4LeSv957UwvjToKcQtPbq1+sc1vEXtOeltJhCHsXs8gFFlAn1rWaLVg=='),
+				$config['admin']['user'] => array('ROLE_ADMIN', $config['admin']['password']),
 			),
 		),
 	),
-));*/
+));
 $app->boot();
+
 $app->match('/', function () use ($app) {
 	$sql = "SELECT * FROM projects ORDER BY id";
 	$projects = $app['db']->fetchAll($sql);
