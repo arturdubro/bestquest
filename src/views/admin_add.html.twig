@@ -24,6 +24,11 @@
 		{{ form_widget(form.short_description) }}
 	</div>
 	<div class="one_position">
+		{{ form_label(form.small_image) }}
+		{{ form_errors(form.small_image) }}
+		{{ form_widget(form.small_image) }}
+	</div>
+	<div class="one_position">
 		{{ form_label(form.long_description) }}
 		{{ form_errors(form.long_description) }}
 		{{ form_widget(form.long_description) }}
@@ -32,11 +37,6 @@
 		{{ form_label(form.big_image) }}
 		{{ form_errors(form.big_image) }}
 		{{ form_widget(form.big_image) }}
-	</div>
-	<div class="one_position">
-		{{ form_label(form.small_image) }}
-		{{ form_errors(form.small_image) }}
-		{{ form_widget(form.small_image) }}
 	</div>
 	<div class="one_position">
 		<div class="one_icon icon_type">
