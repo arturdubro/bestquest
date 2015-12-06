@@ -83,6 +83,80 @@ $app->match('/', function () use ($app) {
         'project_types' => $project_types,
     ));
 });
+
+$app->match('/project/exclusive', function (Request $request) use ($app) {
+    $form = $app['form.factory']
+        ->createBuilder('form')
+        ->add('name','text', array(
+            'required' => true,
+            'label' => 'Имя',
+        ))
+        // ->add('company','text', array(
+        //     'required' => true,
+        //     'label' => 'Компания',
+        // ))
+        // ->add('position','text', array(
+        //     'required' => true,
+        //     'label' => 'Должность',
+        // ))
+        // ->add('review','textarea', array(
+        //     'required' => true,
+        //     'label' => 'Текст отзыва',
+        // ))
+        ->getForm();
+    if ($request->isMethod('POST')) {
+        $to      = 'roman.lapin@gmail.com';
+        $subject = 'Заявка с сайта';
+
+        $headers = 'From: best-quest.ru' . "\r\n" ;
+        $headers .= "Reply-To: " . $_POST['email'] . "\r\n";
+        $headers .= "Content-type: text/plain; charset=UTF-8" . "\r\n";
+        $headers .= "Mime-Version: 1.0" . "\r\n";
+        $message = '';
+
+        if (isset($_POST['name'])) $message = $message . "Имя: " . $_POST['name'] . "\r\n";
+        if (isset($_POST['email'])) $message = $message . "E-mail: " . $_POST['email'] . "\r\n";
+        if (isset($_POST['phone'])) $message = $message . "Телефон: " . $_POST['phone'] . "\r\n";
+        if (isset($_POST['date'])) $message = $message . "Дата: " . $_POST['date'] . "\r\n";
+        if (isset($_POST['qty'])) $message = $message . "Количество человек: " . $_POST['qty'] . "\r\n";
+        if (isset($_POST['descr'])) $message = $message . "Дополнительная информация: " . $_POST['descr'] . "\r\n";
+        if (isset($_POST['location'])) $message = $message . "Отправлено со страницы: " . $_POST['location'] . "\r\n";
+        if (isset($_POST['task'])) $message = $message . "Цель мероприятия: " . $_POST['task'] . "\r\n";
+        if (isset($_POST['work'])) $message = $message . "Сфера деятельности компании: " . $_POST['work'] . "\r\n";
+        if (isset($_POST['age'])) $message = $message . "Средний возраст участников: " . $_POST['age'] . "\r\n";
+        if (isset($_POST['like'])) $message = $message . "Понравившиеся сценарии прошлых мероприятий: " . $_POST['like'] . "\r\n";
+        if (isset($_POST['dislike'])) $message = $message . "Мероприятия, концепции которых вам не понравились: " . $_POST['dislike'] . "\r\n";
+        if (isset($_POST['ideas'])) $message = $message . "Пожелания и идеи: " . $_POST['ideas'] . "\r\n";
+
+        mail($to, $subject, $message, $headers);
+        return new Response();
+    }
+    /* Выбираем все проекты */
+    $sql = "SELECT * FROM projects ORDER BY id";
+    $projects = $app['db']->fetchAll($sql);
+    for ($i = 0; $i < count($projects); $i++){
+        /* Назначаем нужный тип проекта */
+        $sql = "SELECT * FROM project_id_type WHERE project_id = '".$projects[$i]['id']."'";
+        $project_types = $app['db']->fetchAll($sql);
+        $types_name = '';
+        for ($j = 0; $j < count($project_types); $j++){
+            $sql = "SELECT * FROM project_types WHERE id = '".$project_types[$j]['project_type']."'";
+            $projects[$i]['data_type'][$j] = $app['db']->fetchAll($sql);
+            $projects[$i]['data_type'][$j] = $projects[$i]['data_type'][$j][0];
+        }
+    }
+
+    /* Выбираем все типы проектов */
+    $sql = "SELECT * FROM project_types";
+    $project_types = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('project_exclusive.html.twig', array(
+        'project_types' => $project_types,
+        'projects' => $projects,
+        'form' => $form->createView(),
+    ));
+});
+
 $app->match('/project/{id}', function ($id) use ($app) {
     
     /* Выбираем все проекты */
@@ -1349,11 +1423,6 @@ $app->match('/admin/about', function (Request $request) use ($app) {
         'clients' => $about_partners,
     ));
 });
-
-
-
-
-
 
 
 /*$app->error(function(\Exception $e, $code) use ($app){
