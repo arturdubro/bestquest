@@ -85,25 +85,32 @@ $app->match('/', function () use ($app) {
 });
 
 $app->match('/project/exclusive', function (Request $request) use ($app) {
-    $form = $app['form.factory']
-        ->createBuilder('form')
-        ->add('name','text', array(
-            'required' => true,
-            'label' => 'Имя',
-        ))
-        // ->add('company','text', array(
-        //     'required' => true,
-        //     'label' => 'Компания',
-        // ))
-        // ->add('position','text', array(
-        //     'required' => true,
-        //     'label' => 'Должность',
-        // ))
-        // ->add('review','textarea', array(
-        //     'required' => true,
-        //     'label' => 'Текст отзыва',
-        // ))
-        ->getForm();
+    /* Выбираем все проекты */
+    $sql = "SELECT * FROM projects ORDER BY id";
+    $projects = $app['db']->fetchAll($sql);
+    for ($i = 0; $i < count($projects); $i++){
+        /* Назначаем нужный тип проекта */
+        $sql = "SELECT * FROM project_id_type WHERE project_id = '".$projects[$i]['id']."'";
+        $project_types = $app['db']->fetchAll($sql);
+        $types_name = '';
+        for ($j = 0; $j < count($project_types); $j++){
+            $sql = "SELECT * FROM project_types WHERE id = '".$project_types[$j]['project_type']."'";
+            $projects[$i]['data_type'][$j] = $app['db']->fetchAll($sql);
+            $projects[$i]['data_type'][$j] = $projects[$i]['data_type'][$j][0];
+        }
+    }
+
+    /* Выбираем все типы проектов */
+    $sql = "SELECT * FROM project_types";
+    $project_types = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('project_exclusive.html.twig', array(
+        'project_types' => $project_types,
+        'projects' => $projects,
+    ));
+});
+
+$app->post('/project/apply', function (Request $request) use ($app) {
     if ($request->isMethod('POST')) {
         $to      = 'roman.lapin@gmail.com';
         $subject = 'Заявка с сайта';
@@ -129,33 +136,10 @@ $app->match('/project/exclusive', function (Request $request) use ($app) {
         if (isset($_POST['ideas'])) $message = $message . "Пожелания и идеи: " . $_POST['ideas'] . "\r\n";
 
         mail($to, $subject, $message, $headers);
-        return new Response();
     }
-    /* Выбираем все проекты */
-    $sql = "SELECT * FROM projects ORDER BY id";
-    $projects = $app['db']->fetchAll($sql);
-    for ($i = 0; $i < count($projects); $i++){
-        /* Назначаем нужный тип проекта */
-        $sql = "SELECT * FROM project_id_type WHERE project_id = '".$projects[$i]['id']."'";
-        $project_types = $app['db']->fetchAll($sql);
-        $types_name = '';
-        for ($j = 0; $j < count($project_types); $j++){
-            $sql = "SELECT * FROM project_types WHERE id = '".$project_types[$j]['project_type']."'";
-            $projects[$i]['data_type'][$j] = $app['db']->fetchAll($sql);
-            $projects[$i]['data_type'][$j] = $projects[$i]['data_type'][$j][0];
-        }
-    }
-
-    /* Выбираем все типы проектов */
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
-
-    return $app['twig']->render('project_exclusive.html.twig', array(
-        'project_types' => $project_types,
-        'projects' => $projects,
-        'form' => $form->createView(),
-    ));
+    return new Response();
 });
+
 
 $app->match('/project/{id}', function ($id) use ($app) {
     
