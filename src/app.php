@@ -112,7 +112,7 @@ $app->match('/project/exclusive', function (Request $request) use ($app) {
 
 $app->post('/project/apply', function (Request $request) use ($app) {
     if ($request->isMethod('POST')) {
-        $to      = 'roman.lapin@gmail.com';
+        $to      = 'info@best-quest.ru';
         $subject = 'Заявка с сайта';
 
         $headers = 'From: best-quest.ru' . "\r\n" ;
