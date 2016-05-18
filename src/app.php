@@ -75,7 +75,7 @@ $app->match('/', function () use ($app) {
         $projects[$i]['data_type'] = $types_name;
     }
     
-    $sql = "SELECT * FROM project_types";
+    $sql = "SELECT * FROM project_types WHERE id IN (SELECT project_type FROM project_id_type)";
     $project_types = $app['db']->fetchAll($sql);
     
     return $app['twig']->render('index.html.twig', array(
