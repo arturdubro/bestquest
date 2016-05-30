@@ -75,7 +75,7 @@ $app->match('/', function () use ($app) {
         $projects[$i]['data_type'] = $types_name;
     }
     
-    $sql = "SELECT * FROM project_types WHERE id IN (SELECT project_type FROM project_id_type)";
+    $sql = "SELECT DISTINCT (project_types.id) id, name, full_name, svg FROM project_types INNER JOIN project_id_type ON project_types.id = project_id_type.project_type ORDER BY project_types.id";
     $project_types = $app['db']->fetchAll($sql);
     
     return $app['twig']->render('index.html.twig', array(
