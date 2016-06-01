@@ -1,0 +1,1 @@
+ALTER TABLE `projects` ADD COLUMN `is_in_slider` Int( 255 ) NOT NULL DEFAULT '0';

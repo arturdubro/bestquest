@@ -140,7 +140,6 @@ $app->post('/project/apply', function (Request $request) use ($app) {
     return new Response();
 });
 
-
 $app->match('/project/{id}', function ($id) use ($app) {
     
     /* Выбираем все проекты */
@@ -259,6 +258,11 @@ $app->match('/admin/add', function (Request $request) use ($app) {
             'required' => true,
             'label' => 'Название пректа',
         ))
+        ->add('is_in_slider', 'checkbox', array(
+            'required' => false,
+            'label' => 'В главном слайдере',
+            'data' => (boolean) $selected_project['is_in_slider'],
+        ))
         ->add('project_type', 'choice', array(
             'choices' => $selects,
             'expanded' => true,
@@ -374,10 +378,23 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         /* Файлы */
         $files = $request->files->get($form->getName());
         
-        
         /* Вставка в projects */
-        $sql = "INSERT INTO projects (name, short_description, long_description, icon_type, icon_people, icon_house, icon_car, icon_clock, icon_phone, icon_age, full_description, color) 
-            VALUES('".$data['name']."', '".$data['short_description']."', '".$data['long_description']."', '".$data['icon_type']."', '".$data['icon_people']."', '".$data['icon_house']."', '".$data['icon_car']."', '".$data['icon_clock']."', '".$data['icon_phone']."', '".$data['icon_age']."', '".$data['full_description']."', '".$data['color']."')";
+        $sql = "INSERT INTO projects (name, short_description, long_description, icon_type, icon_people, icon_house, icon_car, icon_clock, icon_phone, icon_age, full_description, color, is_in_slider) 
+            VALUES(
+            '".$data['name']."',
+            '".$data['short_description']."',
+            '".$data['long_description']."',
+            '".$data['icon_type']."',
+            '".$data['icon_people']."',
+            '".$data['icon_house']."',
+            '".$data['icon_car']."',
+            '".$data['icon_clock']."',
+            '".$data['icon_phone']."',
+            '".$data['icon_age']."',
+            '".$data['full_description']."',
+            '".$data['color']."',
+            '".$data['is_in_slider']."'
+            )";
         $app['db']->exec($sql);
         
         /* Узнаем id добавленного проекта */
@@ -476,6 +493,11 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             'attr' => array(
                 'value' => $selected_project['name'],
             ),
+        ))
+        ->add('is_in_slider', 'checkbox', array(
+            'required' => false,
+            'label' => 'В главном слайдере',
+            'data' => (boolean) $selected_project['is_in_slider'],
         ))
         ->add('project_type', 'choice', array(
             'choices' => $selects,
@@ -640,7 +662,8 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             icon_phone = '".$data['icon_phone']."',
             icon_age = '".$data['icon_age']."',
             full_description = '".$data['full_description']."',
-            color = '".$data['color']."'
+            color = '".$data['color']."',
+            is_in_slider = '".$data['is_in_slider']."'
             WHERE id = '".$id."'";
         
         $app['db']->exec($sql);
