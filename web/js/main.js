@@ -1852,7 +1852,11 @@ function() {
         })) : void 0
       }), d.on("click", function(t) {
         var e;
-        return e = $(t.target).data("action") ? $(t.target) : $(t.target).parents("[data-action]"), e.toggleClass("active").siblings().removeClass("active"), r(), l.not(":hidden").length > 1 ? u.removeClass("disabled") : u.addClass("disabled"), l.not(":hidden").length > 2 ? c.removeClass("disabled") : c.addClass("disabled")
+        e = $(t.target).data("action") ? $(t.target) : $(t.target).parents("[data-action]");
+        if(e.hasClass("active") == false) {
+          e.toggleClass("active").siblings().removeClass("active"), r(), l.not(":hidden").length > 1 ? u.removeClass("disabled") : u.addClass("disabled"), l.not(":hidden").length > 2 ? c.removeClass("disabled") : c.addClass("disabled");
+        }
+        return e;
       }), $(window).on("resize", function() {
         return n()
       })
