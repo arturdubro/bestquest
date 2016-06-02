@@ -9,6 +9,11 @@
 		{{ form_widget(form.name) }}
 	</div>
 	<div class="one_position">
+		{{ form_label(form.is_in_slider) }}
+		{{ form_errors(form.is_in_slider) }}
+		{{ form_widget(form.is_in_slider) }}
+	</div>
+	<div class="one_position">
 		{{ form_label(form.project_type) }}
 		{% for one_type in form.project_type %}
 			<div>
