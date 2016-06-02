@@ -1,0 +1,169 @@
+{% extends "project_layout.html.twig" %}
+
+{% block title %}{{project.name|raw}}{% endblock %}
+
+{% block apply %}
+    <div class='order'>
+      <a href='#apply'>Заявка</a>
+    </div>
+{% endblock %}
+
+{% block body_class %}class='sb_quest' {% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <style>
+        .l-section-home{ 
+            background-image:-webkit-linear-gradient(transparent 0%, #232323 70%, #232323 100%),url("/project_files/{{project.id}}/bgs/bg-top.jpg");
+            background-image:linear-gradient(transparent 0%, #232323 70%, #232323 100%),url("/project_files/{{project.id}}/bgs/bg-top.jpg");
+        } 
+        .l-section-descr{ 
+            background-image:url("/project_files/{{project.id}}/bgs/bg-descr.jpg");
+            background-position:center center; 
+        }
+        .l-section-narrow{
+            background-image:url("/project_files/{{project.id}}/bgs/bg-narrow.jpg");
+            background-position:0 -200px;
+        }
+        .l-section-apply{ 
+            background-image:url("/project_files/{{project.id}}/bgs/bg-apply.jpg");
+            background-position:bottom left;
+        }
+        .logo-wrapper{
+            background-color: {{project.color}};
+        }
+        .order>a{
+            background: {{project.color}};
+        } 
+        .l-section-home .b-text-wrapper{
+            background: rgba({{project.rgba.0}},{{project.rgba.1}},{{project.rgba.2}},0.8);
+        }
+        .l-section-home .b-text-wrapper.b-skew-top:before{
+            border-bottom-color: rgba({{project.rgba.0}},{{project.rgba.1}},{{project.rgba.2}},0.8); 
+        }
+        .l-section-home .b-text-wrapper.b-skew-bottom:after{
+            border-top-color: rgba({{project.rgba.0}},{{project.rgba.1}},{{project.rgba.2}},0.8);
+        }
+        .b-order>.item:before{
+            background: {{project.color}}; 
+        }
+        .b-bordered-block{
+            border: 3px solid {{project.color}};
+        }
+        input[type="button"], input[type="reset"], input[type="submit"], button, .s-button{
+            background:{{project.color}};
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+      <section class='l-section l-section-home b-skew b-skew-bottom dark'>
+        <div class='b-text-wrapper b-skew b-skew-top b-skew-bottom'>
+          <h1>{{project.name|raw}}</h1>
+        </div>
+        <div class='b-bottom-icons'>
+            {% for one_icon in icons %}
+                <div class='icon {{one_icon.name}}'>
+                    <img src="/img/icons/{{one_icon.image}}">
+                    <p class="icontext">{{one_icon.text|raw|nl2br}}</p>
+                </div>
+            {% endfor %}
+        </div>
+      </section>
+      <section class='l-section l-section-descr'>
+        <div class='b-text-wrapper'>
+          <article>
+            <h2 class='s-title'>Описание</h2>
+            <p>{{project.full_description|raw}}</p>
+          </article>
+        </div>
+      </section>
+      <section class='l-section l-section-order b-skew b-skew-top b-skew-bottom light'>
+        <h2 class='s-title'>Регламент</h2>
+        <ol class='b-order'>
+            {% for one_regulation in regulations %}
+                <li class='item'>
+                    <div class='b-order-block'>
+                      <h3>{{one_regulation.header|raw}}</h3>
+                      <p>{{one_regulation.text|raw}}</p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ol>
+      </section>
+      <section class='l-section l-section-photos b-skew b-skew-bottom dark'>
+        <h2 class='s-title white'>Фотографии</h2>
+        <div class='b-carousel' id='photos'>
+          <ul class='list'>
+                {% for one_photo in photos %}
+                    <li class='item'><img width="634" height="495" src="/project_files/{{project.id}}/photos/{{one_photo.image}}" /></li>
+                {% endfor %}
+          </ul>
+          <div class='b-carousel__next'>
+            <svg enable-background='new 0 0 45.8 45.8' height='45px' space='preserve' version='1.1' viewbox='0 0 45.8 45.8' width='45px' x='0px' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+              <g>
+                <path d='M32.4,23.7H12.1c-0.4,0-0.6-0.4-0.6-0.9c0-0.5,0.3-0.9,0.6-0.9h20.3c0.4,0,0.6,0.4,0.6,0.9&#x000A;        C33.1,23.3,32.8,23.7,32.4,23.7z' fill='#FFFFFF'></path>
+                <path d='M22.9,45.8C10.3,45.8,0,35.5,0,22.9S10.3,0,22.9,0s22.9,10.3,22.9,22.9S35.5,45.8,22.9,45.8z M22.9,1.7&#x000A;        c-11.7,0-21.1,9.5-21.1,21.1C1.7,34.5,11.2,44,22.9,44C34.5,44,44,34.5,44,22.9C44,11.2,34.5,1.7,22.9,1.7z' fill='#FFFFFF'></path>
+                <polygon fill='#FFFFFF' points='29.9,16.3 36.5,22.9 29.9,29.4   '></polygon>
+              </g>
+            </svg>
+          </div>
+          <div class='b-carousel__prev'>
+            <svg enable-background='new 0 0 45.8 45.8' height='45px' id='Layer_1' space='preserve' version='1.1' viewbox='0 0 45.8 45.8' width='45px' x='0px' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns='http://www.w3.org/2000/svg' y='0px'>
+              <g>
+                <path d='M13.3,22.1h20.3c0.4,0,0.6,0.4,0.6,0.9c0,0.5-0.3,0.9-0.6,0.9H13.3c-0.4,0-0.6-0.4-0.6-0.9&#x000A;        C12.7,22.5,13,22.1,13.3,22.1z' fill='#FFFFFF'></path>
+                <path d='M22.9,0c12.6,0,22.9,10.3,22.9,22.9S35.5,45.8,22.9,45.8C10.3,45.8,0,35.5,0,22.9S10.3,0,22.9,0z M22.9,44&#x000A;     C34.5,44,44,34.5,44,22.9c0-11.7-9.5-21.1-21.1-21.1c-11.7,0-21.1,9.5-21.1,21.1C1.7,34.5,11.2,44,22.9,44z' fill='#FFFFFF'></path>
+                <polygon fill='#FFFFFF' points='15.8,29.5 9.2,22.9 15.8,16.3    '></polygon>
+              </g>
+            </svg>
+          </div>
+        </div>
+      </section>
+      <section class='l-section l-section-narrow'></section>
+      <section class='l-section l-section-reviews b-skew b-skew-bottom light'>
+        <div class='bg-top'></div>
+        <div class='l-section__body b-skew b-skew-top light'>
+          <h2 class='s-title'>Отзывы</h2>
+            {% for one_review in reviews %}
+                <div class='b-bordered-block b-review'>
+                    <div class='b-review__top'>
+                      <div class='avatar'><img width="128" height="128" src="/project_files/{{project.id}}/reviews/{{one_review.author_avatar}}" /></div>
+                      <div class='name'>{{one_review.author_name|raw}}</div>
+                      <div class='company'>{{one_review.author_company|raw}}</div>
+                      <div class='position'>{{one_review.author_position|raw}}</div>
+                    </div>
+                    <div class='b-review__bottom'>
+                      <p>{{one_review.review_text|raw}}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      </section>
+
+      <section class='l-section l-section-apply' id='apply'>
+        <h2 class='s-title white'>Заявка</h2>
+        <form action="/project/apply" class='s-form b-apply' method="post">
+          <div class='s-form-group'>
+            <label for='name'>Контактное лицо</label>
+            <input class='s-control' id='name' name='name' placeholder='Как к вам обращаться?' size='40' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <input class='s-control' id='email' name='email' placeholder='Ваш e-mail' size='20' type='email'>
+          </div>
+          <div class='s-form-group'>
+            <input class='s-control' id='phone' name='phone' placeholder='Ваш телефон' size='20' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <label class='inline' for='date'>Когда</label>
+            <input class='s-control date' id='date' name='date' size='12' type='text'>
+            <label class='inline' for='qty'>Человек</label>
+            <input type="number" name="qty" value="0" max="1000" style='width: 60px'>
+          </div>
+          <div class='s-form-group'>
+            <textarea class='s-control textarea' id='descr' name='descr' placeholder='Подробности' rows='6'></textarea>
+          </div>
+          <button class='s-button block' type='submit'>Отправить</button>
+        </form>
+      </section>
+{% endblock %}
+

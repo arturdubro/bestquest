@@ -1,0 +1,233 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+<div class="container">
+<a href="/admin" class="back_to_main">Назад</a>
+{{ form_start(form) }}
+	<div class="one_position">
+		<img src="/img/about/bgs/bg-top.jpg">
+		<p class="change_image">Заменить фоновую картинку</p>
+		{{ form_errors(form.change_about_bg) }}
+		{{ form_widget(form.change_about_bg) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.color) }}
+		{{ form_errors(form.color) }}
+		{{ form_widget(form.color) }}
+	</div>
+	<div class="one_position">
+		<div class="div50">
+			{{ form_label(form.left_text) }}
+			{% for one_collection in form.left_text %}
+				<div class="left_text">
+					{{ form_errors(one_collection) }}
+					{{ form_widget(one_collection) }}
+					<a href="" class="delete_project project_action">Удалить</a>
+				</div>
+			{% endfor %}
+			<a href="#" class="add_project project_action add_text" data-item="left_text">Добавить</a>
+		</div>
+		<div class="div50">
+			<p>{{ form_label(form.right_text) }}</p>
+			{% for one_collection in form.right_text %}
+				<div class="right_text">
+					{{ form_errors(one_collection) }}
+					{{ form_widget(one_collection) }}
+					<a href="#" class="delete_project project_action">Удалить</a>
+				</div>
+			{% endfor %}
+			<a href="#" class="add_project project_action add_text" data-item="right_text">Добавить</a>
+		</div>
+	</div>
+	<div class="one_position">
+		<p class="one_position_header">Команда</p>
+		{% for key, one_name in form.about_team_name %}
+			<div class="div50 one_team">
+				<img src="/img/about/team/{{team[key].photo}}"/>
+				<p class="change_image">Заменить фото</p>
+				<input type="file" name="form[change_about_img][{{key}}]">
+				{{ form_errors(one_name) }}
+				{{ form_widget(one_name) }}
+				
+				{{ form_errors(form.about_team_position[key]) }}
+				{{ form_widget(form.about_team_position[key]) }}
+		
+				{{ form_errors(form.about_team_text[key]) }}
+				{{ form_widget(form.about_team_text[key]) }}
+				
+				<a href="#" class="delete_project project_action">Удалить</a>
+			</div>
+		{% endfor %}
+		<a href="#" class="add_project project_action add_team" data-item="one_team">Добавить</a>
+	</div>
+	<div class="one_position">
+		<p class="one_position_header">Клиенты</p>
+		{% for key, one_partner in form.about_partners_href %}
+			<div class="one_partner div50">
+				<img src="/img/about/partners/{{clients[key].img}}"/>
+				<p class="change_image">Заменить картинку</p>
+				<input type="file" name="form[change_about_partners_img][{{key}}]"/>
+				{{ form_errors(one_partner) }}
+				{{ form_widget(one_partner) }}
+				<a href="#" class="delete_project project_action">Удалить</a>
+			</div>
+		{% endfor %}
+		<a href="#" class="add_project project_action add_partner" data-item="one_partner">Добавить</a></div>
+	</div>
+<input type="submit" value="Редактировать"/>
+{{ form_end(form) }}
+</div>
+<script>
+	var change_img = document.getElementsByClassName('change_image');
+	for (var i=0; i<change_img.length; i++){
+		change_img[i].onclick = function(){
+			this.nextElementSibling.style.display = 'block';
+		}
+	}
+	
+	var delete_one = document.getElementsByClassName('delete_project');
+	for (var i=0; i<delete_one.length; i++){
+		delete_one[i].onclick = function(event){
+			event = event || window.event;
+			event.preventDefault();
+			this.parentNode.parentNode.removeChild(this.parentNode);
+		}
+	}
+	var add_text = document.getElementsByClassName('add_text');
+	var counter = new Object();
+	for (var i=0; i<add_text.length; i++){
+		counter[add_text[i].getAttribute('data-item')] = 0;
+		add_text[i].onclick = function(event){
+			event = event || window.event;
+			event.preventDefault();
+			var data_item = this.getAttribute('data-item');
+			
+			// Создаем div
+			var new_div = document.createElement('DIV');
+			new_div.classList.add(data_item);
+			// Создаем textarea
+			var new_textarea = document.createElement('TEXTAREA');
+			new_textarea.name = 'form[add_'+ data_item +']['+ counter[data_item] +']';
+			new_div.appendChild(new_textarea);
+			// Создаем кнопку удаления
+			var new_delete = document.createElement('A');
+			new_delete.href = '#';
+			new_delete.classList.add('delete_project');
+			new_delete.classList.add('project_action');
+			new_delete.innerHTML = 'Удалить';
+			new_delete.onclick = function(event){
+				event = event || window.event;
+				event.preventDefault();
+				this.parentNode.parentNode.removeChild(this.parentNode);
+			}
+			// Добавляем все в div и в документ
+			new_div.appendChild(new_delete);
+			this.parentNode.insertBefore(new_div, this);
+			
+			counter[data_item]++;
+		}
+	}
+	
+	var add_team = document.getElementsByClassName('add_team');
+	for (var i=0; i<add_team.length; i++){
+		counter[add_team[i].getAttribute('data-item')] = 0;
+		add_team[i].onclick = function(event){
+			event = event || window.event;
+			event.preventDefault();
+			var data_item = this.getAttribute('data-item');
+			
+			// Создаем div
+			var new_div = document.createElement('DIV');
+			new_div.classList.add(data_item);
+			new_div.classList.add('div50');
+			
+			// Создаем inputs
+			var new_avatar = document.createElement('input');
+			new_avatar.type = 'file';
+			new_avatar.name = 'form[add_about_team_photo]['+ counter[data_item] +']';
+			new_div.appendChild(new_avatar);
+			
+			var new_name = document.createElement('input');
+			new_name.name = 'form[add_about_team_name]['+ counter[data_item] +']';
+			new_name.type = 'text';
+			new_name.placeholder = 'Имя';
+			new_div.appendChild(new_name);
+			
+			var new_position = document.createElement('input');
+			new_position.name = 'form[add_about_team_position]['+ counter[data_item] +']';
+			new_position.type = 'text';
+			new_position.placeholder = 'Должность';
+			new_div.appendChild(new_position);
+			
+			var new_txt = document.createElement('input');
+			new_txt.name = 'form[add_about_team_text]['+ counter[data_item] +']';
+			new_txt.type = 'text';
+			new_txt.placeholder = 'Текст';
+			new_div.appendChild(new_txt);
+			
+			// Создаем кнопку удаления
+			var new_delete = document.createElement('A');
+			new_delete.href = '#';
+			new_delete.classList.add('delete_project');
+			new_delete.classList.add('project_action');
+			new_delete.innerHTML = 'Удалить';
+			new_delete.onclick = function(event){
+				event = event || window.event;
+				event.preventDefault();
+				this.parentNode.parentNode.removeChild(this.parentNode);
+			}
+			
+			// Добавляем все в div и в документ
+			new_div.appendChild(new_delete);
+			this.parentNode.insertBefore(new_div, this);
+			
+			counter[data_item]++;
+		}
+	}
+	
+	var add_partner = document.getElementsByClassName('add_partner');
+	for (var i=0; i<add_partner.length; i++){
+		counter[add_partner[i].getAttribute('data-item')] = 0;
+		add_partner[i].onclick = function(event){
+			event = event || window.event;
+			event.preventDefault();
+			var data_item = this.getAttribute('data-item');
+			
+			// Создаем div
+			var new_div = document.createElement('DIV');
+			new_div.classList.add(data_item);
+			new_div.classList.add('div50');
+			
+			// Создаем inputs
+			var new_img = document.createElement('input');
+			new_img.type = 'file';
+			new_img.name = 'form[add_about_partners_img]['+ counter[data_item] +']';
+			new_div.appendChild(new_img);
+			
+			var new_name = document.createElement('input');
+			new_name.name = 'form[add_about_partners_href]['+ counter[data_item] +']';
+			new_name.type = 'text';
+			new_name.placeholder = 'Ссылка';
+			new_div.appendChild(new_name);
+			
+			
+			// Создаем кнопку удаления
+			var new_delete = document.createElement('A');
+			new_delete.href = '#';
+			new_delete.classList.add('delete_project');
+			new_delete.classList.add('project_action');
+			new_delete.innerHTML = 'Удалить';
+			new_delete.onclick = function(event){
+				event = event || window.event;
+				event.preventDefault();
+				this.parentNode.parentNode.removeChild(this.parentNode);
+			}
+			
+			// Добавляем все в div и в документ
+			new_div.appendChild(new_delete);
+			this.parentNode.insertBefore(new_div, this);
+			
+			counter[data_item]++;
+		}
+	}
+</script>
+{% endblock %}

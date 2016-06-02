@@ -1,0 +1,75 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+<div class="container">
+<a href="/admin" class="back_to_main">Назад</a>
+{{ form_start(form) }}
+	<div class="one_position">
+		{{ form_label(form.project) }}
+		{{ form_errors(form.project) }}
+		{{ form_widget(form.project) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.name) }}
+		{{ form_errors(form.name) }}
+		{{ form_widget(form.name) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.company) }}
+		{{ form_errors(form.company) }}
+		{{ form_widget(form.company) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.position) }}
+		{{ form_errors(form.position) }}
+		{{ form_widget(form.position) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.review) }}
+		{{ form_errors(form.review) }}
+		{{ form_widget(form.review) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.avatar) }}
+		{{ form_errors(form.avatar) }}
+		{{ form_widget(form.avatar) }}
+	</div>
+<input type="submit" value="Добавить"/>
+{{ form_end(form) }}
+</div>
+<script>
+	var add_images = document.getElementById('form_photos');
+	add_images.name = add_images.name + '[]';
+	
+	var regulation_count = 0;
+	var add_regulation = document.getElementById('add_regulation');
+	var delete_regulation = document.getElementById('delete_regulation');
+	add_regulation.onclick = function(){
+		var new_regulation = document.createElement('DIV');
+		new_regulation.classList.add('one_regulation');
+		
+		var p_header = document.createElement('P');
+		p_header.innerHTML = 'Заголовок';
+		var p_text = document.createElement('P');
+		p_text.innerHTML = 'Текст';
+		
+		var new_regulation_header = document.createElement('INPUT');
+		new_regulation_header.name = 'form[regulation_headers]['+ regulation_count +']';
+		var new_regulation_text = document.createElement('INPUT');
+		new_regulation_text.name = 'form[regulation_texts]['+ regulation_count +']';
+		regulation_count++;
+		
+		new_regulation.appendChild(p_header);
+		new_regulation.appendChild(new_regulation_header);
+		new_regulation.appendChild(p_text);
+		new_regulation.appendChild(new_regulation_text);
+		this.parentNode.insertBefore(new_regulation, this);
+	}
+	delete_regulation.onclick = function(){
+		var regulations = this.parentNode.getElementsByClassName('one_regulation');
+		if (regulations.length > 0){
+			regulations[0].parentNode.removeChild(regulations[regulations.length-1]);
+			regulation_count--;
+		}
+	}
+</script>
+{% endblock %}

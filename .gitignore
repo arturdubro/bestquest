@@ -1,0 +1,4 @@
+*.db
+vendor/*
+config/config.php
+web/project_files/*

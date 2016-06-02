@@ -1,0 +1,54 @@
+{% extends "project_layout.html.twig" %}
+
+{% block title %}Эксклюзивный Проект от Best Quest{% endblock %}
+
+{% block styles %}
+    {{ parent() }}
+    <link href="/css/exclusive.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block body_class %}class='exclusive' {% endblock %}
+
+{% block content %}
+      <section class='l-section l-section-apply' id='apply'>
+        <h2 class='s-title'>Анкета</h2>
+        <form action="/project/apply" method="post" class='s-form b-apply'>
+          <div class='s-form-group'>
+            <label for='name'>Контактное лицо</label>
+            <input required class='s-control' id='name' name='name' placeholder='Ваше имя' size='45' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <input required class='s-control' id='phone' name='phone' placeholder='Телефон для связи' size='45' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <input required class='s-control' id='task' name='task' placeholder='Цель вашего мероприятия' size='45' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <input required class='s-control' id='work' name='work' placeholder='Сфера деятельности вашей компании' size='45' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <label class='inline' for='date'>Когда</label>
+            <input required class='s-control date' id='date' name='date' size='12' type='text'>
+            <label class='inline' for='qty'>Человек</label>
+            <input required type="number" name="qty" value="0" max="1000" style='width: 60px'>
+          </div>
+          <div class='s-form-group'>
+            <input required class='s-control' id='age' name='age' placeholder='Средний возраст участников' size='45' type='text'>
+          </div>
+          <div class='s-form-group'>
+            <textarea class='s-control textarea' id='like' name='like' placeholder='Понравившиеся сценарии прошлых мероприятий' rows='6'></textarea>
+          </div>
+          <div class='s-form-group'>
+            <textarea class='s-control textarea' id='dislike' name='dislike' placeholder='Мероприятия, концепции которых вам не понравились' rows='6'></textarea>
+          </div>
+          <div class='s-form-group'>
+            <textarea class='s-control textarea' id='ideas' name='ideas' placeholder='Ваши пожелания и идеи' rows='6'></textarea>
+          </div>
+          <div class='s-form-group'>
+            <input required class='s-control' id='email' name='email' placeholder='Ваш e-mail для ответа' size='45' type='email'>
+          </div>
+          <button class='s-button block' type='submit'>Отправить</button>
+        </form>
+      </section>
+{% endblock %}
+
