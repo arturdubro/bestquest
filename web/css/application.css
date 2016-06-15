@@ -1988,6 +1988,7 @@ textarea,
 .b-carousel .list .item.active {
   z-index: 2;
   opacity: 1;
+
   -webkit-transition: transform 500ms ease-out,  -webkit-transform 500ms ease-out,  top 500ms ease-out,  opacity 500ms ease-out;
      -moz-transition: transform 500ms ease-out,  -moz-transform 500ms ease-out,  top 500ms ease-out,  opacity 500ms ease-out;
       -ms-transition: transform 500ms ease-out,  -ms-transform 500ms ease-out,  top 500ms ease-out,  opacity 500ms ease-out;
@@ -2004,8 +2005,14 @@ textarea,
 
 #photos .list .item {
   overflow: hidden;
-  max-width: 378px;
-  height: 300px;
+  top: 0%;
+  max-width: 604.8px;
+  height: 480px;
+  -webkit-transform: scale(0.625,  0.625);
+   -moz-transform: scale(0.625,  0.625));
+    -ms-transform: scale(0.625,  0.625));
+     -o-transform: scale(0.625,  0.625));
+        transform: scale(0.625,  0.625));
 }
 
 #photos .list .item img {
@@ -2014,12 +2021,11 @@ textarea,
 }
 
 #photos .list .item.active {
-  top: 18%;
-  -webkit-transform: scale(1.6,  1.6);
-     -moz-transform: scale(1.6,  1.6);
-      -ms-transform: scale(1.6,  1.6);
-       -o-transform: scale(1.6,  1.6);
-          transform: scale(1.6,  1.6);
+  -webkit-transform: scale(1,  1);
+     -moz-transform: scale(1,  1));
+      -ms-transform: scale(1,  1));
+       -o-transform: scale(1,  1));
+          transform: scale(1,  1));
 
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
