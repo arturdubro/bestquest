@@ -141,7 +141,7 @@ $app->post('/project/apply', function (Request $request) use ($app) {
     return new Response();
 });
 
-$app->match('/project/{id}', function ($id) use ($app) {
+$app->match('/project/{slug}', function ($slug) use ($app) {
     
     /* Выбираем все проекты */
     $sql = "SELECT * FROM projects ORDER BY id";
@@ -157,7 +157,10 @@ $app->match('/project/{id}', function ($id) use ($app) {
             $projects[$i]['data_type'][$j] = $projects[$i]['data_type'][$j][0];
         }
         /* Выбраем нужный проект */
-        if ($projects[$i]['id'] == $id) $project = $projects[$i];
+        if ($projects[$i]['slug'] == $slug) {
+            $project = $projects[$i];
+            $id = $project['id'];
+        }
     }
     
     /* Выбираем все типы проектов */
