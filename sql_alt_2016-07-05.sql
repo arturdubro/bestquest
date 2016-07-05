@@ -1,0 +1,1 @@
+ALTER TABLE `projects` ADD COLUMN `slug` VARCHAR( 255 ) NOT NULL AFTER `name`;
