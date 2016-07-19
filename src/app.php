@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Silex\Application\SecurityTrait;
+use Cocur\Slugify\Slugify;
 
 $config = include_once __DIR__ . '/../config/config.php';
 
@@ -140,7 +141,7 @@ $app->post('/project/apply', function (Request $request) use ($app) {
     return new Response();
 });
 
-$app->match('/project/{id}', function ($id) use ($app) {
+$app->match('/project/{slug}', function ($slug) use ($app) {
     
     /* Выбираем все проекты */
     $sql = "SELECT * FROM projects ORDER BY id";
@@ -156,7 +157,10 @@ $app->match('/project/{id}', function ($id) use ($app) {
             $projects[$i]['data_type'][$j] = $projects[$i]['data_type'][$j][0];
         }
         /* Выбраем нужный проект */
-        if ($projects[$i]['id'] == $id) $project = $projects[$i];
+        if ($projects[$i]['slug'] == $slug) {
+            $project = $projects[$i];
+            $id = $project['id'];
+        }
     }
     
     /* Выбираем все типы проектов */
@@ -377,9 +381,12 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         
         /* Файлы */
         $files = $request->files->get($form->getName());
+
+        $slugify = new Slugify();
+        $data['slug'] = $slugify->slugify($data['name']);
         
         /* Вставка в projects */
-        $sql = "INSERT INTO projects (name, short_description, long_description, icon_type, icon_people, icon_house, icon_car, icon_clock, icon_phone, icon_age, full_description, color, is_in_slider) 
+        $sql = "INSERT INTO projects (name, short_description, long_description, icon_type, icon_people, icon_house, icon_car, icon_clock, icon_phone, icon_age, full_description, color, is_in_slider, slug)
             VALUES(
             '".$data['name']."',
             '".$data['short_description']."',
@@ -393,7 +400,8 @@ $app->match('/admin/add', function (Request $request) use ($app) {
             '".$data['icon_age']."',
             '".$data['full_description']."',
             '".$data['color']."',
-            '".$data['is_in_slider']."'
+            '".$data['is_in_slider']."',
+            '".$data['slug']."'
             )";
         $app['db']->exec($sql);
         
@@ -648,7 +656,10 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
         
         /* Файлы */
         $files = $request->files->get($form->getName());
-        
+
+        $slugify = new Slugify();
+        $data['slug'] = $slugify->slugify($data['name']);
+
         /* Вставка в projects */
         $sql = "UPDATE projects SET 
             name = '".$data['name']."',
@@ -663,7 +674,8 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             icon_age = '".$data['icon_age']."',
             full_description = '".$data['full_description']."',
             color = '".$data['color']."',
-            is_in_slider = '".$data['is_in_slider']."'
+            is_in_slider = '".$data['is_in_slider']."',
+            slug = '".$data['slug']."'
             WHERE id = '".$id."'";
         
         $app['db']->exec($sql);
