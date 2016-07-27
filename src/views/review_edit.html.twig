@@ -4,29 +4,19 @@
 <a href="/admin" class="back_to_main">Назад</a>
 {{ form_start(form) }}
 	<div class="one_position">
-		{{ form_label(form.project) }}
-		{{ form_errors(form.project) }}
-		{{ form_widget(form.project) }}
+		{{ form_row(form.project) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.name) }}
-		{{ form_errors(form.name) }}
-		{{ form_widget(form.name) }}
+		{{ form_row(form.name) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.company) }}
-		{{ form_errors(form.company) }}
-		{{ form_widget(form.company) }}
+		{{ form_row(form.company) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.position) }}
-		{{ form_errors(form.position) }}
-		{{ form_widget(form.position) }}
+		{{ form_row(form.position) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.review) }}
-		{{ form_errors(form.review) }}
-		{{ form_widget(form.review) }}
+		{{ form_row(form.review) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.avatar) }}

@@ -21,8 +21,6 @@ $app = new Application();
 
 $app['debug'] = $config['debug'];
 
-
-
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => __DIR__.'/views',
 ));
@@ -41,7 +39,9 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
         'charset' => $config['db']['charset'],
     ),
 ));
+
 $app['db']->exec('SET NAMES utf8');
+
 $app->register(new Silex\Provider\ValidatorServiceProvider());
 $app->register(new Silex\Provider\SecurityServiceProvider(), array(
     'security.firewalls' => array(
@@ -54,6 +54,7 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
         ),
     ),
 ));
+
 $app->boot();
 
 $app->match('/', function () use ($app) {
@@ -205,6 +206,7 @@ $app->match('/project/{slug}', function ($slug) use ($app) {
         'reviews' => $reviews,
     ));
 });
+
 $app->match('/about', function () use ($app) {
     $sql = "SELECT * FROM about_text WHERE text_column = 'left'";
     $left_text = $app['db']->fetchAll($sql);
@@ -234,18 +236,27 @@ $app->match('/about', function () use ($app) {
     ));
 });
 
+/* АДМИНКА */
+
 $app->match('/admin', function () use ($app) {
     $sql = "SELECT * FROM projects";
     $projects = $app['db']->fetchAll($sql);
-    
+
     $sql = "SELECT * FROM project_review";
     $reviews = $app['db']->fetchAll($sql);
-    
+
+    $sql = "SELECT * FROM project_types";
+    $project_types = $app['db']->fetchAll($sql);
+
     return $app['twig']->render('admin_main.html.twig', array(
         'projects' => $projects,
         'reviews' => $reviews,
+        'project_types' => $project_types,
     ));
 });
+
+/* ПРОЕКТЫ */
+
 $app->match('/admin/add', function (Request $request) use ($app) {
     /* Выбираем все типы проектов */
     $sql = "SELECT * FROM project_types";
@@ -260,7 +271,7 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         ->createBuilder('form', $collections)
         ->add('name','text', array(
             'required' => true,
-            'label' => 'Название пректа',
+            'label' => 'Название проекта',
         ))
         ->add('is_in_slider', 'checkbox', array(
             'required' => false,
@@ -375,7 +386,9 @@ $app->match('/admin/add', function (Request $request) use ($app) {
             'required' => true,
         ))
         ->getForm();
+
     $form->handleRequest($request);
+
     if ($form->isValid()) {
         $data = $form->getData();
         
@@ -455,6 +468,7 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         'form' => $form->createView(),
     ));
 });
+
 $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
     /* Выбираем все типы проектов */
     $sql = "SELECT * FROM project_types";
@@ -477,8 +491,7 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
     for ($i=0; $i<count($selected_project_type); $i++){
         $selected_project['type'][$i] = $selected_project_type[$i]['project_type'];
     }
-    
-    
+
     /* Выбираем фотографии */
     $sql = "SELECT * FROM project_photo WHERE project_id='".$id."'";
     $selected_project['photo'] = $app['db']->fetchAll($sql);
@@ -497,7 +510,7 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
         ->createBuilder('form', $collections)
         ->add('name','text', array(
             'required' => true,
-            'label' => 'Название пректа',
+            'label' => 'Название проекта',
             'attr' => array(
                 'value' => $selected_project['name'],
             ),
@@ -650,7 +663,9 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             'required' => false,
         ))
         ->getForm();
+
     $form->handleRequest($request);
+
     if ($form->isValid()) {
         $data = $form->getData();
         
@@ -817,6 +832,7 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
         'selected_project' => $selected_project,
     ));
 });
+
 $app->match('/admin/delete/{id}', function ($id,Request $request) use ($app) {
     $sql = "DELETE FROM projects WHERE id='".$id."'";
     $app['db']->exec($sql);
@@ -841,12 +857,134 @@ $app->match('/admin/delete/{id}', function ($id,Request $request) use ($app) {
     removeDirectory($path);
     
     /* Выкинуть на главную */
+    $response = new RedirectResponse("/admin");
+    $response->prepare($request);
+    return $response->send();
+});
+
+/* КАТЕГОРИИ ПРОЕКТОВ */
+
+$app->match('/admin/project-type/add', function (Request $request) use ($app) {
+    $form = $app['form.factory']
+        ->createBuilder('form')
+        ->add('name', 'text', array(
+            'required' => true,
+            'label' => 'Краткий идентификатор',
+            'attr' => array(
+                'placeholder' => 'newcat',
+            ),
+        ))
+        ->add('full_name', 'text', array(
+            'required' => true,
+            'label' => 'Название категории',
+            'attr' => array(
+                'placeholder' => 'Новая категория',
+            ),
+        ))
+        ->add('svg', 'textarea', array(
+            'required' => true,
+            'label' => 'Код svg иконки',
+            'attr' => array(
+                'placeholder' => '<svg width="56px" height="56px" viewBox="0 0 56 56" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"></svg>',
+            ),
+        ))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if ($form->isValid()) {
+        $data = $form->getData();
+
+        /* Вставка в project_types */
+        $sql = "INSERT INTO project_types (name, full_name, svg) VALUES (
+            '".$data['name']."',
+            '".$data['full_name']."',
+            '".$data['svg']."'
+            )";
+
+        $app['db']->exec($sql);
+
+        /* Выкинуть на главную */
         $response = new RedirectResponse("/admin");
         $response->prepare($request);
         return $response->send();
-    
-    return 'что-то пошло не так';
+    }
+
+    return $app['twig']->render('project_type_add.html.twig', array(
+        'form' => $form->createView(),
+    ));
 });
+
+$app->match('/admin/project-type/edit/{id}', function ($id, Request $request) use ($app) {
+    /* Выбираем тип проекта */
+    $sql = "SELECT * FROM project_types WHERE id='".$id."'";
+    $selected_project_type = $app['db']->fetchAll($sql);
+    $selected_project_type = $selected_project_type[0];
+
+    $form = $app['form.factory']
+        ->createBuilder('form')
+        ->add('name', 'text', array(
+            'required' => true,
+            'label' => 'Краткий идентификатор',
+            'attr' => array(
+                'value' => $selected_project_type['name'],
+            ),
+        ))
+        ->add('full_name', 'text', array(
+            'required' => true,
+            'label' => 'Название категории',
+            'attr' => array(
+                'value' => $selected_project_type['full_name'],
+            ),
+        ))
+        ->add('svg', 'textarea', array(
+            'required' => true,
+            'label' => 'Код svg иконки',
+            'attr' => array(
+                'value' => $selected_project_type['svg'],
+                'style' => 'height: 500px',
+            ),
+        ))
+        ->getForm();
+
+    $form->handleRequest($request);
+
+    if ($form->isValid()) {
+        $data = $form->getData();
+
+        //* Вставка в project_types */
+        $sql = "UPDATE project_types SET
+            name = '".$data['name']."',
+            full_name = '".$data['full_name']."',
+            svg = '".$data['svg']."'
+            WHERE id = '".$id."'";
+
+        $app['db']->exec($sql);
+
+        /* Выкинуть на главную */
+        $response = new RedirectResponse("/admin");
+        $response->prepare($request);
+        return $response->send();
+    }
+    return $app['twig']->render('project_type_edit.html.twig', array(
+        'form' => $form->createView(),
+        'selected_project_type' => $selected_project_type,
+    ));
+});
+
+$app->match('/admin/project-type/delete/{id}', function ($id, Request $request) use ($app) {
+    $sql = "DELETE FROM project_types WHERE id='".$id."'";
+    $app['db']->exec($sql);
+    $sql = "DELETE FROM project_id_type WHERE project_type='".$id."'";
+    $app['db']->exec($sql);
+
+    /* Выкинуть на главную */
+    $response = new RedirectResponse("/admin");
+    $response->prepare($request);
+    return $response->send();
+});
+
+/* ОТЗЫВЫ */
 
 $app->match('/admin/review_add', function (Request $request) use ($app) {
     /* Выбираем все проекты */
@@ -920,6 +1058,7 @@ $app->match('/admin/review_add', function (Request $request) use ($app) {
         'form' => $form->createView(),
     ));
 });
+
 $app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app) {
     /* Выбираем отзыв */
     $sql = "SELECT * FROM project_review WHERE id='".$id."'";
@@ -974,7 +1113,9 @@ $app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app
             'required' => false,
         ))
         ->getForm();
+
     $form->handleRequest($request);
+
     if ($form->isValid()) {
         $data = $form->getData();
         
@@ -1004,19 +1145,19 @@ $app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app
                 $salt = 0;
                 while (file_exists($path . substr($filename,0,-4) . '_' . $salt . substr($filename,-4))){
                     $salt++;
+                }
+                $filename = substr($filename,0,-4) . '_' . $salt . substr($filename,-4);
+                $files['avatar']->move($path, $filename);
+                $sql = "UPDATE project_review SET 
+                    author_avatar = '".$filename."'
+                    WHERE id = '".$id."'";
+                $app['db']->exec($sql);
             }
-            $filename = substr($filename,0,-4) . '_' . $salt . substr($filename,-4);
-            $files['avatar']->move($path, $filename);
-            $sql = "UPDATE project_review SET 
-                author_avatar = '".$filename."'
-                WHERE id = '".$id."'";
-            $app['db']->exec($sql);
-        }
         }
         /* Выкинуть на главную */
-            $response = new RedirectResponse("/admin");
-            $response->prepare($request);
-            return $response->send();
+        $response = new RedirectResponse("/admin");
+        $response->prepare($request);
+        return $response->send();
     }
     return $app['twig']->render('review_edit.html.twig', array(
         'form' => $form->createView(),
@@ -1037,11 +1178,9 @@ $app->match('/admin/review_delete/{id}', function ($id,Request $request) use ($a
     $app['db']->exec($sql);
     
     /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
-        $response->prepare($request);
-        return $response->send();
-    
-    return 'что-то пошло не так';
+    $response = new RedirectResponse("/admin");
+    $response->prepare($request);
+    return $response->send();
 });
 
 $app->match('/admin/about', function (Request $request) use ($app) {
@@ -1442,19 +1581,6 @@ $app->match('/admin/about', function (Request $request) use ($app) {
         'clients' => $about_partners,
     ));
 });
-
-
-/*$app->error(function(\Exception $e, $code) use ($app){
-    return $app['twig']->render('404.html.twig', array(
-        'ob' => $app->ob,
-        'kom' => $app->kom,
-        'os' => $app->os,
-        'title' => 'Ошибка',
-    ));
-});*/
-
-
-
 
 return $app;    
 ?>

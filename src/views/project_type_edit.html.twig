@@ -1,0 +1,21 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <div class="container">
+        <a href="/admin" class="back_to_main">Назад</a>
+        {{ form_start(form) }}
+        <div class="one_position">
+            {{ form_row(form.name) }}
+        </div>
+        <div class="one_position">
+            {{ form_row(form.full_name) }}
+        </div>
+        <div class="one_position">
+            {{ form_row(form.svg) }}
+        </div>
+        <input type="submit" value="Сохранить"/>
+        {{ form_end(form) }}
+    </div>
+    <script>
+        document.getElementById('form_svg').innerHTML = document.getElementById('form_svg').getAttribute('value');
+    </script>
+{% endblock %}
