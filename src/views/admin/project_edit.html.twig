@@ -1,17 +1,15 @@
 {% extends "layout.html.twig" %}
 {% block content %}
-<div class="container">
-<a href="/admin" class="back_to_main">Назад</a>
+<a href="/admin/projects" class="back_to_main">Назад</a>
 {{ form_start(form) }}
 	<div class="one_position">
-		{{ form_label(form.name) }}
-		{{ form_errors(form.name) }}
-		{{ form_widget(form.name) }}
+		{{ form_row(form.name) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.is_in_slider) }}
-		{{ form_errors(form.is_in_slider) }}
-		{{ form_widget(form.is_in_slider) }}
+		{{ form_row(form.slug) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.is_in_slider) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.project_type) }}
@@ -24,23 +22,23 @@
 		{% endfor %}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.short_description) }}
-		{{ form_errors(form.short_description) }}
-		{{ form_widget(form.short_description) }}
+		{{ form_row(form.short_description) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.small_image) }}
 		{{ form_errors(form.small_image) }}
+		<img src="/project_files/{{selected_project.id}}/slider/small_slider_image.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.small_image) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.long_description) }}
-		{{ form_errors(form.long_description) }}
-		{{ form_widget(form.long_description) }}
+		{{ form_row(form.long_description) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.big_image) }}
 		{{ form_errors(form.big_image) }}
+		<img src="/project_files/{{selected_project.id}}/slider/big_slider_image.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.big_image) }}
 	</div>
 	<div class="one_position">
@@ -74,17 +72,26 @@
 		</div>
 	</div>
 	<div class="one_position">
-		{{ form_label(form.full_description) }}
-		{{ form_errors(form.full_description) }}
-		{{ form_widget(form.full_description) }}
+		{{ form_row(form.full_description) }}
 	</div>
 	<div class="one_position">
 		<p class="one_position_header">Регламент</p>
 		<div>
-			{{ form_errors(form.regulation_headers) }}
-			{{ form_widget(form.regulation_headers) }}
-			{{ form_errors(form.regulation_texts) }}
-			{{ form_widget(form.regulation_texts) }}
+			{% for one_regulation in form.regulation_headers %}
+				<div class="one_regulation">
+					<p>Заголовок</p>
+					{{ form_errors(one_regulation) }}
+					{{ form_widget(one_regulation) }}
+					<p>Текст</p>
+					{% set counter = loop.index0 %}
+					{% for one_text in form.regulation_texts %}
+						{% if counter == loop.index0 %}
+							{{ form_errors(one_text) }}
+							{{ form_widget(one_text) }}
+						{% endif %}
+					{% endfor %}
+				</div>
+			{% endfor %}
 		</div>
 		<p class="add_delete" id="add_regulation">Добавить</p>
 		<p class="add_delete" id="delete_regulation">Удалить</p>
@@ -92,41 +99,51 @@
 	<div class="one_position">
 		{{ form_label(form.photos) }}
 		{{ form_errors(form.photos) }}
-		{{ form_widget(form.photos) }}
+		<div class="photos">
+			{% for one_photo in form.photos %}
+				<div class="one_photo">
+					{{ form_widget(one_photo, {'attr' : {'class' : 'hidden_input'}}) }}
+				</div>
+			{% endfor %}
+		</div>
+		<p class="change_image">Добавить фотографии</p>
+		{{ form_widget(form.add_photos) }}
 	</div>
 	<div class="one_position">
-		{{ form_label(form.color) }}
-		{{ form_errors(form.color) }}
-		{{ form_widget(form.color) }}
+		{{ form_row(form.color) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.bg_top) }}
 		{{ form_errors(form.bg_top) }}
+		<img src="/project_files/{{selected_project.id}}/bgs/bg-top.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.bg_top) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.bg_descr) }}
 		{{ form_errors(form.bg_descr) }}
+		<img src="/project_files/{{selected_project.id}}/bgs/bg-descr.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.bg_descr) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.bg_narrow) }}
 		{{ form_errors(form.bg_narrow) }}
+		<img src="/project_files/{{selected_project.id}}/bgs/bg-narrow.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.bg_narrow) }}
 	</div>
 	<div class="one_position">
 		{{ form_label(form.bg_apply) }}
 		{{ form_errors(form.bg_apply) }}
+		<img src="/project_files/{{selected_project.id}}/bgs/bg-apply.jpg" alt="big"/>
+		<p class="change_image">Заменить</p>
 		{{ form_widget(form.bg_apply) }}
 	</div>
-<input type="submit" value="Добавить"/>
+<input type="submit" value="Сохранить"/>
 {{ form_end(form) }}
-</div>
 <script>
-	var add_images = document.getElementById('form_photos');
-	add_images.name = add_images.name + '[]';
-	
-	var regulation_count = 0;
+	var regulation_count = document.getElementsByClassName('one_regulation').length;
 	var add_regulation = document.getElementById('add_regulation');
 	var delete_regulation = document.getElementById('delete_regulation');
 	add_regulation.onclick = function(){
@@ -153,9 +170,55 @@
 	delete_regulation.onclick = function(){
 		var regulations = this.parentNode.getElementsByClassName('one_regulation');
 		if (regulations.length > 0){
-			regulations[0].parentNode.removeChild(regulations[regulations.length-1]);
+			regulations[regulations.length-1].parentNode.removeChild(regulations[regulations.length-1]);
 			regulation_count--;
 		}
 	}
+	
+	var change_img = document.getElementsByClassName('change_image');
+	for (var i=0; i<change_img.length; i++){
+		change_img[i].onclick = function(){
+			this.nextElementSibling.style.display = 'block';
+		}
+	}
+	
+	
+	var photos = document.getElementsByClassName('one_photo');
+	for (var i=0; i<photos.length; i++){
+		var input = photos[i].getElementsByTagName('INPUT')[0].value;
+		// Добавляем сам img 
+		var img = document.createElement('IMG');
+		img.src = input;
+		photos[i].appendChild(img);
+		
+		// Возможность удаления
+		var photo_delete = document.createElement('DIV');
+		photo_delete.classList.add('photo_delete');
+		photos[i].appendChild(photo_delete);
+	}
+	
+	var photo_delete = document.getElementsByClassName('photo_delete');
+	for (var i=0; i<photo_delete.length; i++){
+		photo_delete[i].onclick = function(){
+			//Узнаем какую по счету фотографию удалили, у следующих уменьшить порядковый номер
+			var number;
+			for (var j=0; j<photos.length; j++){
+				if ( photos[j] == this.parentNode) {
+					j++;
+					break;
+				}
+			}
+			for (var j; j<photos.length; j++){
+				var photo_input = photos[j].getElementsByTagName('INPUT')[0];
+				var new_number = +photo_input.name.slice(photo_input.name.lastIndexOf('[')+1, photo_input.name.lastIndexOf(']')) - 1;
+				photo_input.name = photo_input.name.slice(0, photo_input.name.lastIndexOf('[')+1) + new_number + ']';
+			}
+			this.parentNode.parentNode.removeChild(this.parentNode);
+		}
+	}
+	
+	var add_images = document.getElementById('form_add_photos');
+	add_images.name = add_images.name + '[]';
+	
 </script>
 {% endblock %}

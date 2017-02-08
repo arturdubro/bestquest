@@ -1,0 +1,136 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+<a href="/admin/projects" class="back_to_main">Назад</a>
+{{ form_start(form) }}
+	<div class="one_position">
+		{{ form_row(form.name) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.slug) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.is_in_slider) }}
+	</div>
+	<div class="one_position">
+		{{ form_label(form.project_type) }}
+		{% for one_type in form.project_type %}
+			<div>
+				{{ form_errors(one_type) }}
+				{{ form_widget(one_type) }}
+				{{ form_label(one_type) }}
+			</div>
+		{% endfor %}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.short_description) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.small_image) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.long_description) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.big_image) }}
+	</div>
+	<div class="one_position">
+		<div class="one_icon icon_type">
+			{{ form_errors(form.icon_type) }}
+			{{ form_widget(form.icon_type) }}
+		</div>
+		<div class="one_icon icon_people">
+			{{ form_errors(form.icon_people) }}
+			{{ form_widget(form.icon_people) }}
+		</div>
+		<div class="one_icon icon_house">
+			{{ form_errors(form.icon_house) }}
+			{{ form_widget(form.icon_house) }}
+		</div>
+		<div class="one_icon icon_car">
+			{{ form_errors(form.icon_car) }}
+			{{ form_widget(form.icon_car) }}
+		</div>
+		<div class="one_icon icon_clock">
+			{{ form_errors(form.icon_clock) }}
+			{{ form_widget(form.icon_clock) }}
+		</div>
+		<div class="one_icon icon_phone">
+			{{ form_errors(form.icon_phone) }}
+			{{ form_widget(form.icon_phone) }}
+		</div>
+		<div class="one_icon icon_age">
+			{{ form_errors(form.icon_age) }}
+			{{ form_widget(form.icon_age) }}
+		</div>
+	</div>
+	<div class="one_position">
+		{{ form_row(form.full_description) }}
+	</div>
+	<div class="one_position">
+		<p class="one_position_header">Регламент</p>
+		<div>
+			{{ form_errors(form.regulation_headers) }}
+			{{ form_widget(form.regulation_headers) }}
+			{{ form_errors(form.regulation_texts) }}
+			{{ form_widget(form.regulation_texts) }}
+		</div>
+		<p class="add_delete" id="add_regulation">Добавить</p>
+		<p class="add_delete" id="delete_regulation">Удалить</p>
+	</div>
+	<div class="one_position">
+		{{ form_row(form.photos) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.color) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.bg_top) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.bg_descr) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.bg_narrow) }}
+	</div>
+	<div class="one_position">
+		{{ form_row(form.bg_apply) }}
+	</div>
+<input type="submit" value="Добавить"/>
+{{ form_end(form) }}
+<script>
+	var add_images = document.getElementById('form_photos');
+	add_images.name = add_images.name + '[]';
+	
+	var regulation_count = 0;
+	var add_regulation = document.getElementById('add_regulation');
+	var delete_regulation = document.getElementById('delete_regulation');
+	add_regulation.onclick = function(){
+		var new_regulation = document.createElement('DIV');
+		new_regulation.classList.add('one_regulation');
+		
+		var p_header = document.createElement('P');
+		p_header.innerHTML = 'Заголовок';
+		var p_text = document.createElement('P');
+		p_text.innerHTML = 'Текст';
+		
+		var new_regulation_header = document.createElement('INPUT');
+		new_regulation_header.name = 'form[regulation_headers]['+ regulation_count +']';
+		var new_regulation_text = document.createElement('INPUT');
+		new_regulation_text.name = 'form[regulation_texts]['+ regulation_count +']';
+		regulation_count++;
+		
+		new_regulation.appendChild(p_header);
+		new_regulation.appendChild(new_regulation_header);
+		new_regulation.appendChild(p_text);
+		new_regulation.appendChild(new_regulation_text);
+		this.parentNode.insertBefore(new_regulation, this);
+	}
+	delete_regulation.onclick = function(){
+		var regulations = this.parentNode.getElementsByClassName('one_regulation');
+		if (regulations.length > 0){
+			regulations[0].parentNode.removeChild(regulations[regulations.length-1]);
+			regulation_count--;
+		}
+	}
+</script>
+{% endblock %}

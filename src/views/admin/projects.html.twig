@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <div class="main div50">
+        <div class="header">Проекты</div>
+        <a href="/admin/project/add" class="add-item project-action">Добавить новый проект</a>
+        <table class="items-list">
+            {% set color = 'gray' %}
+            {% for project in projects %}
+                <tr class="{{ color }}">
+                    <td class="item-name"><a href="/admin/project/edit/{{ project.id }}" class="edit-item-link">{{project.name}}</a></td>
+                    <td class="item-edit"><a href="/admin/project/edit/{{ project.id }}" class="edit-project project-action edit-item-link">Редактировать</a></td>
+                    <td class="item-delete"><a href="/admin/project/delete/{{ project.id }}" class="delete-project project-action edit-item-link">Удалить</a></td>
+                </tr>
+                {% if color == 'gray' %}
+                    {% set color = 'white' %}
+                {% else %}
+                    {% set color = 'gray' %}
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

@@ -2,12 +2,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Silex\Provider\FormServiceProvider;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Form\AbstractType;
-use Silex\Application\SecurityTrait;
 use Cocur\Slugify\Slugify;
 
 $config = include_once __DIR__ . '/../config/config.php';
@@ -57,6 +52,8 @@ $app->register(new Silex\Provider\SecurityServiceProvider(), array(
 
 $app->boot();
 
+/* INDEX */
+
 $app->match('/', function () use ($app) {
     $sql = "SELECT * FROM projects ORDER BY id";
     $projects = $app['db']->fetchAll($sql);
@@ -86,7 +83,7 @@ $app->match('/', function () use ($app) {
     ));
 });
 
-$app->match('/project/exclusive', function (Request $request) use ($app) {
+$app->match('/project/exclusive', function () use ($app) {
     /* Выбираем все проекты */
     $sql = "SELECT * FROM projects ORDER BY id";
     $projects = $app['db']->fetchAll($sql);
@@ -94,7 +91,6 @@ $app->match('/project/exclusive', function (Request $request) use ($app) {
         /* Назначаем нужный тип проекта */
         $sql = "SELECT * FROM project_id_type WHERE project_id = '".$projects[$i]['id']."'";
         $project_types = $app['db']->fetchAll($sql);
-        $types_name = '';
         for ($j = 0; $j < count($project_types); $j++){
             $sql = "SELECT * FROM project_types WHERE id = '".$project_types[$j]['project_type']."'";
             $projects[$i]['data_type'][$j] = $app['db']->fetchAll($sql);
@@ -151,7 +147,6 @@ $app->match('/project/{slug}', function ($slug) use ($app) {
         /* Назначаем нужный тип проекта */
         $sql = "SELECT * FROM project_id_type WHERE project_id = '".$projects[$i]['id']."'";
         $project_types = $app['db']->fetchAll($sql);
-        $types_name = '';
         for ($j = 0; $j < count($project_types); $j++){
             $sql = "SELECT * FROM project_types WHERE id = '".$project_types[$j]['project_type']."'";
             $projects[$i]['data_type'][$j] = $app['db']->fetchAll($sql);
@@ -239,25 +234,46 @@ $app->match('/about', function () use ($app) {
 /* АДМИНКА */
 
 $app->match('/admin', function () use ($app) {
+    return $app->redirect('/admin/projects');
+});
+
+/* РАЗДЕЛЫ */
+
+$app->match('/admin/projects', function () use ($app) {
     $sql = "SELECT * FROM projects";
     $projects = $app['db']->fetchAll($sql);
 
-    $sql = "SELECT * FROM project_review";
-    $reviews = $app['db']->fetchAll($sql);
+    return $app['twig']->render('admin/projects.html.twig', array(
+        'projects' => $projects,
+    ));
+});
 
+$app->match('/admin/project-types', function () use ($app) {
     $sql = "SELECT * FROM project_types";
     $project_types = $app['db']->fetchAll($sql);
 
-    return $app['twig']->render('admin_main.html.twig', array(
-        'projects' => $projects,
+    return $app['twig']->render('admin/project_types.html.twig', array(
+        'project_types' => $project_types,
+    ));
+});
+
+$app->match('/admin/reviews', function () use ($app) {
+    $sql = "SELECT * FROM project_review";
+    $reviews = $app['db']->fetchAll($sql);
+
+    return $app['twig']->render('admin/reviews.html.twig', array(
         'reviews' => $reviews,
         'project_types' => $project_types,
     ));
 });
 
+$app->match('/admin/pages', function () use ($app) {
+    return $app['twig']->render('admin/pages.html.twig', array());
+});
+
 /* ПРОЕКТЫ */
 
-$app->match('/admin/add', function (Request $request) use ($app) {
+$app->match('/admin/project/add', function (Request $request) use ($app) {
     /* Выбираем все типы проектов */
     $sql = "SELECT * FROM project_types";
     $project_types = $app['db']->fetchAll($sql);
@@ -272,6 +288,10 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         ->add('name','text', array(
             'required' => true,
             'label' => 'Название проекта',
+        ))
+        ->add('slug','text', array(
+            'required' => true,
+            'label' => 'slug',
         ))
         ->add('is_in_slider', 'checkbox', array(
             'required' => false,
@@ -367,7 +387,7 @@ $app->match('/admin/add', function (Request $request) use ($app) {
             'label' => 'Цвет оформления',
             'attr' => array(
                     'placeholder' => '#000000',
-                )
+                ),
         ))
         ->add('bg_top', 'file', array(
             'label' => 'Фоновая картинка верх',
@@ -456,20 +476,19 @@ $app->match('/admin/add', function (Request $request) use ($app) {
         $files['bg_descr']->move($path,'bg-descr.jpg');
         $files['bg_narrow']->move($path,'bg-narrow.jpg');
         $files['bg_apply']->move($path,'bg-apply.jpg');
-        
-        
+
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/projects");
         $response->prepare($request);
         return $response->send();
     }
     
-    return $app['twig']->render('admin_add.html.twig', array(
+    return $app['twig']->render('admin/project_add.html.twig', array(
         'form' => $form->createView(),
     ));
 });
 
-$app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
+$app->match('/admin/project/edit/{id}', function ($id,Request $request) use ($app) {
     /* Выбираем все типы проектов */
     $sql = "SELECT * FROM project_types";
     $project_types = $app['db']->fetchAll($sql);
@@ -513,6 +532,13 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             'label' => 'Название проекта',
             'attr' => array(
                 'value' => $selected_project['name'],
+            ),
+        ))
+        ->add('slug','text', array(
+            'required' => true,
+            'label' => 'slug',
+            'attr' => array(
+                'value' => $selected_project['slug'],
             ),
         ))
         ->add('is_in_slider', 'checkbox', array(
@@ -644,7 +670,7 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
             'label' => 'Цвет оформления',
             'attr' => array(
                 'value' => $selected_project['color'],
-            )
+            ),
         ))
         ->add('bg_top', 'file', array(
             'label' => 'Фоновая картинка верх',
@@ -789,6 +815,7 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
                 }
             }
         }
+
         /* Если загружены еще фотографии, то добавляем их */
         if ($files['add_photos'] && !empty($files['add_photos'][0])){
             $path = __DIR__.'/../web/project_files/'.$id.'/photos/';
@@ -823,17 +850,17 @@ $app->match('/admin/edit/{id}', function ($id,Request $request) use ($app) {
         }
         
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/projects");
         $response->prepare($request);
         return $response->send();
     }
-    return $app['twig']->render('admin_edit.html.twig', array(
+    return $app['twig']->render('admin/project_edit.html.twig', array(
         'form' => $form->createView(),
         'selected_project' => $selected_project,
     ));
 });
 
-$app->match('/admin/delete/{id}', function ($id,Request $request) use ($app) {
+$app->match('/admin/project/delete/{id}', function ($id,Request $request) use ($app) {
     $sql = "DELETE FROM projects WHERE id='".$id."'";
     $app['db']->exec($sql);
     $sql = "DELETE FROM project_id_type WHERE project_id='".$id."'";
@@ -857,7 +884,7 @@ $app->match('/admin/delete/{id}', function ($id,Request $request) use ($app) {
     removeDirectory($path);
     
     /* Выкинуть на главную */
-    $response = new RedirectResponse("/admin");
+    $response = new RedirectResponse("/admin/projects");
     $response->prepare($request);
     return $response->send();
 });
@@ -897,27 +924,26 @@ $app->match('/admin/project-type/add', function (Request $request) use ($app) {
 
         /* Вставка в project_types */
         $sql = "INSERT INTO project_types (name, full_name, svg) VALUES (
-            '".$data['name']."',
-            '".$data['full_name']."',
-            '".$data['svg']."'
+            '" . $data['name'] . "',
+            '" . $data['full_name'] . "',
+            '" . $data['svg'] . "'
             )";
-
         $app['db']->exec($sql);
 
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/project-types");
         $response->prepare($request);
         return $response->send();
     }
 
-    return $app['twig']->render('project_type_add.html.twig', array(
+    return $app['twig']->render('admin/project_type_add.html.twig', array(
         'form' => $form->createView(),
     ));
 });
 
 $app->match('/admin/project-type/edit/{id}', function ($id, Request $request) use ($app) {
     /* Выбираем тип проекта */
-    $sql = "SELECT * FROM project_types WHERE id='".$id."'";
+    $sql = "SELECT * FROM project_types WHERE id='" . $id . "'";
     $selected_project_type = $app['db']->fetchAll($sql);
     $selected_project_type = $selected_project_type[0];
 
@@ -952,41 +978,41 @@ $app->match('/admin/project-type/edit/{id}', function ($id, Request $request) us
     if ($form->isValid()) {
         $data = $form->getData();
 
-        //* Вставка в project_types */
+//* Вставка в project_types */
         $sql = "UPDATE project_types SET
-            name = '".$data['name']."',
-            full_name = '".$data['full_name']."',
-            svg = '".$data['svg']."'
-            WHERE id = '".$id."'";
+            name = '" . $data['name'] . "',
+            full_name = '" . $data['full_name'] . "',
+            svg = '" . $data['svg'] . "'
+            WHERE id = '" . $id . "'";
 
         $app['db']->exec($sql);
 
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/project-types");
         $response->prepare($request);
         return $response->send();
     }
-    return $app['twig']->render('project_type_edit.html.twig', array(
+    return $app['twig']->render('admin/project_type_edit.html.twig', array(
         'form' => $form->createView(),
         'selected_project_type' => $selected_project_type,
     ));
 });
 
 $app->match('/admin/project-type/delete/{id}', function ($id, Request $request) use ($app) {
-    $sql = "DELETE FROM project_types WHERE id='".$id."'";
+    $sql = "DELETE FROM project_types WHERE id='" . $id . "'";
     $app['db']->exec($sql);
-    $sql = "DELETE FROM project_id_type WHERE project_type='".$id."'";
+    $sql = "DELETE FROM project_id_type WHERE project_type='" . $id . "'";
     $app['db']->exec($sql);
 
     /* Выкинуть на главную */
-    $response = new RedirectResponse("/admin");
+    $response = new RedirectResponse("/admin/project-types");
     $response->prepare($request);
     return $response->send();
 });
 
 /* ОТЗЫВЫ */
 
-$app->match('/admin/review_add', function (Request $request) use ($app) {
+$app->match('/admin/review/add', function (Request $request) use ($app) {
     /* Выбираем все проекты */
     $sql = "SELECT * FROM projects";
     $projects = $app['db']->fetchAll($sql);
@@ -1049,17 +1075,17 @@ $app->match('/admin/review_add', function (Request $request) use ($app) {
         $app['db']->exec($sql);
         
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/reviews");
         $response->prepare($request);
         return $response->send();
     }
     
-    return $app['twig']->render('review_add.html.twig', array(
+    return $app['twig']->render('admin/review_add.html.twig', array(
         'form' => $form->createView(),
     ));
 });
 
-$app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app) {
+$app->match('/admin/review/edit/{id}', function ($id,Request $request) use ($app) {
     /* Выбираем отзыв */
     $sql = "SELECT * FROM project_review WHERE id='".$id."'";
     $review = $app['db']->fetchAll($sql);
@@ -1133,7 +1159,6 @@ $app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app
         $app['db']->exec($sql);
         
         /* Добавление фотографии */
-        $path = __DIR__.'/../web/project_files/'.$id.'/bgs/';
         if ($files['avatar']){
             // Удаляем старую фотографию
             $path = __DIR__.'/../web/project_files/'.$review['project_id'].'/reviews/';
@@ -1155,16 +1180,17 @@ $app->match('/admin/review_edit/{id}', function ($id,Request $request) use ($app
             }
         }
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/reviews");
         $response->prepare($request);
         return $response->send();
     }
-    return $app['twig']->render('review_edit.html.twig', array(
+    return $app['twig']->render('admin/review_edit.html.twig', array(
         'form' => $form->createView(),
         'selected_review' => $review,
     ));
 });
-$app->match('/admin/review_delete/{id}', function ($id,Request $request) use ($app) {
+
+$app->match('/admin/review/delete/{id}', function ($id,Request $request) use ($app) {
     $sql = "SELECT * FROM project_review WHERE id='".$id."'";
     $review = $app['db']->fetchAll($sql);
     $review = $review[0];
@@ -1178,12 +1204,12 @@ $app->match('/admin/review_delete/{id}', function ($id,Request $request) use ($a
     $app['db']->exec($sql);
     
     /* Выкинуть на главную */
-    $response = new RedirectResponse("/admin");
-    $response->prepare($request);
-    return $response->send();
+        $response = new RedirectResponse("/admin/reviews");
+        $response->prepare($request);
+        return $response->send();
 });
 
-$app->match('/admin/about', function (Request $request) use ($app) {
+$app->match('/admin/about/edit', function (Request $request) use ($app) {
     $sql = "SELECT * FROM about_page";
     $color = $app['db']->fetchAll($sql);
     $sql = "SELECT * FROM about_text WHERE text_column = 'left'";
@@ -1450,6 +1476,7 @@ $app->match('/admin/about', function (Request $request) use ($app) {
                 $app['db']->exec($sql);
             }            
         }
+
         /* Если добавились еще параграфы */
         if (!empty($data['add_right_text'])){
             for ($i=0; $i<count($data['add_right_text']); $i++){
@@ -1494,6 +1521,7 @@ $app->match('/admin/about', function (Request $request) use ($app) {
                 
             }
         }
+
         /* Если добавилась еще команда */
         if (!empty($files['add_about_team_photo']) && !empty($data['add_about_team_name']) && !empty($data['add_about_team_position']) && !empty($data['add_about_team_text'])){
             for ($i=0; $i<count($data['add_about_team_name']); $i++){
@@ -1545,6 +1573,7 @@ $app->match('/admin/about', function (Request $request) use ($app) {
                 $app['db']->exec($sql);
             }
         }
+
         /* Если добавились еще клиенты */
         if (!empty($files['add_about_partners_img'])){
             for ($i=0; $i<count($files['add_about_partners_img']); $i++){
@@ -1570,12 +1599,12 @@ $app->match('/admin/about', function (Request $request) use ($app) {
         }
     
         /* Выкинуть на главную */
-        $response = new RedirectResponse("/admin");
+        $response = new RedirectResponse("/admin/pages");
         $response->prepare($request);
         return $response->send();
     }
     
-    return $app['twig']->render('admin_about.html.twig', array(
+    return $app['twig']->render('admin/about_edit.html.twig', array(
         'form' => $form->createView(),
         'team' => $about_team,
         'clients' => $about_partners,
@@ -1583,4 +1612,3 @@ $app->match('/admin/about', function (Request $request) use ($app) {
 });
 
 return $app;    
-?>

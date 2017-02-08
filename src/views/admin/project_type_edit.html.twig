@@ -1,0 +1,19 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <a href="/admin/project-types" class="back_to_main">Назад</a>
+    {{ form_start(form) }}
+    <div class="one_position">
+            {{ form_row(form.name) }}
+        </div>
+    <div class="one_position">
+            {{ form_row(form.full_name) }}
+        </div>
+    <div class="one_position">
+        {{ form_row(form.svg) }}
+    </div>
+    <input type="submit" value="Сохранить"/>
+    {{ form_end(form) }}
+    <script>
+        document.getElementById('form_svg').innerHTML = document.getElementById('form_svg').getAttribute('value');
+    </script>
+{% endblock %}

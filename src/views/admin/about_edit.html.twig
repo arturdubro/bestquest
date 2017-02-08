@@ -1,7 +1,6 @@
 {% extends "layout.html.twig" %}
 {% block content %}
-<div class="container">
-<a href="/admin" class="back_to_main">Назад</a>
+<a href="/admin/pages" class="back_to_main">Назад</a>
 {{ form_start(form) }}
 	<div class="one_position">
 		<img src="/img/about/bgs/bg-top.jpg">
@@ -71,11 +70,10 @@
 				<a href="#" class="delete_project project_action">Удалить</a>
 			</div>
 		{% endfor %}
-		<a href="#" class="add_project project_action add_partner" data-item="one_partner">Добавить</a></div>
+		<a href="#" class="add_project project_action add_partner" data-item="one_partner">Добавить</a>
 	</div>
-<input type="submit" value="Редактировать"/>
+<input type="submit" value="Сохранить"/>
 {{ form_end(form) }}
-</div>
 <script>
 	var change_img = document.getElementsByClassName('change_image');
 	for (var i=0; i<change_img.length; i++){

@@ -1,0 +1,22 @@
+{% extends "layout.html.twig" %}
+{% block content %}
+    <div class="one_main div50">
+        <div class="header">Отзывы</div>
+        <a href="/admin/review/add" class="add-item project-action">Добавить отзыв</a>
+        <table class="items-list">
+            {% set color = 'gray' %}
+            {% for review in reviews %}
+                <tr class="{{ color }}">
+                    <td class="item-name"><a href="/admin/review/edit/{{ review.id }}" class="edit-item-link">{{ review.author_name }}</a></td>
+                    <td class="item-edit"><a href="/admin/review/edit/{{ review.id }}" class="edit-project project-action edit-item-link">Редактировать</a></td>
+                    <td class="item-delete"><a href="/admin/review/delete/{{ review.id }}" class="delete-project project-action edit-item-link">Удалить</a></td>
+                </tr>
+                {% if color == 'gray' %}
+                    {% set color = 'white' %}
+                {% else %}
+                    {% set color = 'gray' %}
+                {% endif %}
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

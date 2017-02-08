@@ -1,7 +1,6 @@
 {% extends "layout.html.twig" %}
 {% block content %}
-<div class="container">
-<a href="/admin" class="back_to_main">Назад</a>
+<a href="/admin/reviews" class="back_to_main">Назад</a>
 {{ form_start(form) }}
 	<div class="one_position">
 		{{ form_row(form.project) }}
@@ -23,7 +22,6 @@
 	</div>
 <input type="submit" value="Добавить"/>
 {{ form_end(form) }}
-</div>
 <script>
 	var add_images = document.getElementById('form_photos');
 	add_images.name = add_images.name + '[]';
