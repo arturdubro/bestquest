@@ -61,12 +61,9 @@
             <li class='item'>
               <a href="/">Проекты</a>
               <ul class='l-header__submenu js-slider-control'>
-                <li class='item'><a href="/?tour">Зарубежным гостям</a></li>
-                <li class='item'><a href="/?city">Городской проект</a></li>
-                <li class='item'><a href="/?corp">Корпоративные мероприятия</a></li>
-                <li class='item'><a href="/?priv">Частные программы</a></li>
-                <li class='item'><a href="/?kids">Детский праздник</a></li>
-                <li class='item'><a href="/?wedd">Свадебные истории</a></li>
+                {% for project_type in project_types %}
+                  <li class='item'><a href="/?{{ project_type.name }}">{{ project_type.full_name }}</a></li>
+                {% endfor %}
                 <li class='item'><a href="/?excl">Эксклюзивный проект</a></li>
               </ul>
             <li class='item'>
@@ -175,12 +172,9 @@
           </dl>
           <dl class='l-footer__menu'>
             <dt class='title'>Проекты</dt>
-            <dd class='item'><a href="/?tour">Зарубежным гостям</a></dd>
-            <dd class='item'><a href="/?city">Городской проект</a></dd>
-            <dd class='item'><a href="/?corp">Корпоративные мероприятия</a></dd>
-            <dd class='item'><a href="/?priv">Частные программы</a></dd>
-            <dd class='item'><a href="/?kids">Детский праздник</a></dd>
-            <dd class='item'><a href="/?wedd">Свадебные истории</a></dd>
+            {% for project_type in project_types %}
+              <dd class='item'><a href="/?{{ project_type.name }}">{{ project_type.full_name }}</a></dd>
+            {% endfor %}
             <dd class='item'><a href="/?excl">Эксклюзивный проект</a></dd>
           </dl>
           <dl class='l-footer__menu' id='contacts'>

@@ -10,6 +10,12 @@ $config = include_once __DIR__ . '/../config/config.php';
 class Application extends Silex\Application
 {
     use Silex\Application\SecurityTrait;
+
+    public function getActiveProjectTypes()
+    {
+        $sql = "SELECT DISTINCT (project_types.id) id, name, full_name, svg FROM project_types INNER JOIN project_id_type ON project_types.id = project_id_type.project_type ORDER BY project_types.id";
+        return $this['db']->fetchAll($sql);
+    }
 }
 
 $app = new Application();
@@ -74,8 +80,7 @@ $app->match('/', function () use ($app) {
         $projects[$i]['data_type'] = $types_name;
     }
     
-    $sql = "SELECT DISTINCT (project_types.id) id, name, full_name, svg FROM project_types INNER JOIN project_id_type ON project_types.id = project_id_type.project_type ORDER BY project_types.id";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
     
     return $app['twig']->render('index.html.twig', array(
         'projects' => $projects,
@@ -99,8 +104,7 @@ $app->match('/project/exclusive', function () use ($app) {
     }
 
     /* Выбираем все типы проектов */
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
 
     return $app['twig']->render('project_exclusive.html.twig', array(
         'project_types' => $project_types,
@@ -160,8 +164,7 @@ $app->match('/project/{slug}', function ($slug) use ($app) {
     }
     
     /* Выбираем все типы проектов */
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
     
     /* Выбираем все иконки для проекта */
     $sql = "SELECT * FROM icons";
@@ -221,8 +224,11 @@ $app->match('/about', function () use ($app) {
     $color['rgb'] = str_split(substr($color['hex'], 1), 2);
     foreach($color['rgb'] as $key => $value)
         $color['rgb'][$key] = hexdec($value);
-    
+
+    $project_types = $app->getActiveProjectTypes();
+
     return $app['twig']->render('about.html.twig', array(
+        'project_types' => $project_types,
         'left_text' => $left_text,
         'right_text' => $right_text,
         'about_team' => $about_team,
@@ -249,8 +255,7 @@ $app->match('/admin/projects', function () use ($app) {
 });
 
 $app->match('/admin/project-types', function () use ($app) {
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
 
     return $app['twig']->render('admin/project_types.html.twig', array(
         'project_types' => $project_types,
@@ -260,6 +265,7 @@ $app->match('/admin/project-types', function () use ($app) {
 $app->match('/admin/reviews', function () use ($app) {
     $sql = "SELECT * FROM project_review";
     $reviews = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
 
     return $app['twig']->render('admin/reviews.html.twig', array(
         'reviews' => $reviews,
@@ -275,8 +281,7 @@ $app->match('/admin/pages', function () use ($app) {
 
 $app->match('/admin/project/add', function (Request $request) use ($app) {
     /* Выбираем все типы проектов */
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
     $selects = array();
     for ($i=0; $i<count($project_types); $i++){
         $selects[$project_types[$i]['id']] = $project_types[$i]['full_name'];
@@ -490,8 +495,7 @@ $app->match('/admin/project/add', function (Request $request) use ($app) {
 
 $app->match('/admin/project/edit/{id}', function ($id,Request $request) use ($app) {
     /* Выбираем все типы проектов */
-    $sql = "SELECT * FROM project_types";
-    $project_types = $app['db']->fetchAll($sql);
+    $project_types = $app->getActiveProjectTypes();
     $selects = array();
     for ($i=0; $i<count($project_types); $i++){
         $selects[$project_types[$i]['id']] = $project_types[$i]['full_name'];
@@ -1611,4 +1615,4 @@ $app->match('/admin/about/edit', function (Request $request) use ($app) {
     ));
 });
 
-return $app;    
+return $app;
